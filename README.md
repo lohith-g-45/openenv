@@ -1,0 +1,71 @@
+# OpenEnv: Intelligent Code Evaluation & Optimization Engine
+
+**OpenEnv** is a state-of-the-art backend engine designed for the next generation of algorithmic learning and high-performance code evaluation. It transforms standard code execution into an intelligent, tutoring-aware environment that not only finds bugs but mathematically proves the absolute best way to solve any algorithmic challenge.
+
+---
+
+## 🚀 Key Features
+
+*   **⚡ Hybrid Intelligence**: Merges deterministic mathematical analysis (AST-based) with the deep reasoning of **Llama-3.3-70B** via the Groq API.
+*   **🚑 Heuristic Auto-Repair**: Automatically heals syntax errors (missing colons, brackets) and injects missing edge-case guards (`if not nums: return 0`) before evaluation.
+*   **🔮 LLM-Driven Test Oracle**: Dynamically deduces the problem intent and generates 4-5 rigorous LeetCode-style edge cases in JSON format for any submission.
+*   **🛡️ Secure Sandbox Execution**: Safely executes user code in a restricted, 5-second max threaded sandbox to prevent infinite loops and protect system resources.
+*   **🧮 Mathematical Big-O Prover**: Uses AST inspections and the **Master Theorem** to definitively categorize time and space complexity ($O(n)$, $O(n^2)$, $O(\log n)$, etc.).
+*   **🎓 AI-Powered Algorithmic Tutor**: Unlike generic hint systems, our tutor provides deep theoretical walkthroughs, step-by-step logic breakdown, and hands over a perfectly synthesized, optimal Python code block.
+
+---
+
+## 🛠️ Core Engines
+
+1.  **`repair_engine.py`**: The Healer. Fixes syntax and logic structural bugs.
+2.  **`execution_engine.py`**: The Sandbox. Secure execution and empirical timing.
+3.  **`analysis.py`**: The Mathematician. Static AST analysis and pattern classification.
+4.  **`optimization_engine.py`**: The Architect. Rule-based ranking for 14+ algorithmic patterns.
+5.  **`llm_manager.py`**: The Brain. Handles Groq API integration for synthesis and tutoring.
+
+---
+
+## ⚙️ Installation & Setup
+
+1.  **Clone the Repository**:
+    ```bash
+    git clone https://github.com/lohith-g-45/openenv.git
+    cd openenv
+    ```
+
+2.  **Setup Virtual Environment**:
+    ```bash
+    python -m venv venv
+    venv\Scripts\activate  # Windows
+    source venv/bin/activate  # Mac/Linux
+    ```
+
+3.  **Install Dependencies**:
+    ```bash
+    pip install groq python-dotenv
+    ```
+
+4.  **Configure API Key**:
+    Create a `.env` file in the root directory and add your Groq API key:
+    ```env
+    GROQ_API_KEY="your_actual_api_key_here"
+    ```
+
+---
+
+## 🚀 How to Run
+
+To run the unified hybrid evaluation pipeline:
+```bash
+python pipeline.py
+```
+
+To run the comprehensive system test:
+```bash
+python final_test.py
+```
+
+---
+
+## ⚖️ License
+MIT License. Part of the **Intelligent Code Evaluation and Optimization Environment** Hackathon Project.
