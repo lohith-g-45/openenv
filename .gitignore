@@ -1,0 +1,13 @@
+.env
+venv/
+__pycache__/
+*.txt
+*.bat
+final_test.py
+explanation.txt
+explanation2.txt
+out.txt
+out2.txt
+out3.txt
+out4.txt
+out5.txt
