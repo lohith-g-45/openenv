@@ -69,35 +69,80 @@ class BugDetector:
         except SyntaxError:
             return bugs
 
+    @staticmethod
+    def detect_logical_errors(code: str) -> List[Dict]:
+        bugs = []
+        try:
+            tree = ast.parse(code)
+        except SyntaxError:
+            return bugs
+
         class LogicVisitor(ast.NodeVisitor):
-            def visit_Compare(self, node):
-                if (
-                    len(node.ops) == 1
-                    and isinstance(node.ops[0], ast.Eq)
-                    and isinstance(node.left, ast.Name)
-                    and isinstance(node.comparators[0], ast.Name)
-                    and node.left.id == node.comparators[0].id
-                ):
+            def __init__(self):
+                self.defined_vars = set()
+                self.in_func = False
+                self.has_return = False
+
+            def visit_FunctionDef(self, node):
+                # Add function arguments to defined variables
+                for arg in node.args.args:
+                    self.defined_vars.add(arg.arg)
+                
+                self.in_func = True
+                self.has_return = False
+                self.generic_visit(node)
+                
+                # Check for missing return if not a obviously void-intended name
+                if not self.has_return and not node.name.startswith('_'):
                     bugs.append({
-                        "type": "LogicalError",
+                        "type": "MissingReturn",
                         "line": node.lineno,
-                        "message": f"Always-true comparison: '{node.left.id}' compared to itself",
-                        "severity": "warning",
+                        "message": f"Function '{node.name}' has no return statement. It will return None.",
+                        "severity": "critical",
                     })
+                self.in_func = False
+
+            def visit_Return(self, node):
+                self.has_return = True
                 self.generic_visit(node)
 
+            def _handle_def(self, target):
+                if isinstance(target, ast.Name):
+                    self.defined_vars.add(target.id)
+                elif isinstance(target, (ast.Tuple, ast.List)):
+                    for elt in target.elts:
+                        self._handle_def(elt)
+
             def visit_Assign(self, node):
-                if (
-                    len(node.targets) == 1
-                    and isinstance(node.targets[0], ast.Name)
-                    and isinstance(node.value, ast.Name)
-                    and node.targets[0].id == node.value.id
-                ):
+                for target in node.targets:
+                    self._handle_def(target)
+                self.generic_visit(node)
+
+            def visit_For(self, node):
+                self._handle_def(node.target)
+                self.generic_visit(node)
+
+            def visit_Name(self, node):
+                if self.in_func and isinstance(node.ctx, ast.Load):
+                    builtins = {"range", "len", "print", "min", "max", "sum", "sorted", "enumerate", "set", "dict", "list"}
+                    if node.id not in self.defined_vars and node.id not in builtins:
+                        bugs.append({
+                            "type": "UndefinedVariable",
+                            "line": node.lineno,
+                            "message": f"Undefined variable: '{node.id}'",
+                            "severity": "critical",
+                        })
+                self.generic_visit(node)
+
+            def visit_Expr(self, node):
+                # Detect useless standalone expressions like 'nums[i] + nums[j]'
+                if isinstance(node.value, (ast.BinOp, ast.Subscript, ast.Name)):
+                    expr_type = type(node.value).__name__
                     bugs.append({
-                        "type": "LogicalError",
+                        "type": "UselessExpression",
                         "line": node.lineno,
-                        "message": f"No-op assignment: '{node.targets[0].id} = {node.value.id}'",
-                        "severity": "warning",
+                        "message": f"Useless {expr_type}: This operation is not assigned or returned, so it does nothing.",
+                        "severity": "critical",
                     })
                 self.generic_visit(node)
 

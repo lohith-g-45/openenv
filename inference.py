@@ -1,11 +1,11 @@
 # inference.py
 
-from app.core.rl_env import CodeEnv
-from app.grader import EvaluationGrader
+from env import OpenEnv
+from grader import EvaluationGrader
 
 
 def run_inference():
-    env = CodeEnv()
+    env = OpenEnv()
     grader = EvaluationGrader()
 
     actions = [
@@ -19,16 +19,21 @@ def run_inference():
 
     print("[START]")
 
-    for task_id in range(3):
-        env.set_task(task_id)
-        env.reset()
+    # Execute exactly 3 tasks as per Requirement 1.5
+    for difficulty in ["easy", "medium", "hard"]:
+        env.reset(difficulty=difficulty)
 
         for action in actions:
             print(f"[STEP] {action}")
-            env.step(action)
+            # OpenEnv.step returns (state, reward, done, info)
+            state, reward, done, info = env.step(action)
+            
+            if done:
+                break
 
-        # IMPORTANT: call grader but DO NOT PRINT
-        grader.evaluate(env.state, env.task)
+        # Final evaluation score check
+        # We don't print the score to strictly follow the format: [START], [STEP], [END]
+        grader.evaluate(env.state()["state"])
 
     print("[END]")
 

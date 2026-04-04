@@ -49,6 +49,8 @@ class StateResponse(BaseModel):
 
 class SubmitRequest(BaseModel):
     code: str
+    attempt_number: int = Field(default=1, ge=1, description="How many times user has run on this problem (1=first try)")
+    want_full_explanation: bool = Field(default=False, description="User explicitly requested full line-by-line explanation")
 
 
 class SubmitResponse(BaseModel):

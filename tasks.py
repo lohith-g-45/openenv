@@ -17,53 +17,44 @@ TASKS: List[Task] = [
     Task(
         id="easy-1",
         difficulty="easy",
-        problem="Fix add(a, b) so it returns the sum.",
-        code="def add(a, b):\n    return a - b\n",
+        problem="Two Sum: Find indices of two numbers that sum to target.",
+        code="def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
         test_cases=[
-            {"name": "t1", "input": "add(1, 2)", "expected": "3"},
-            {"name": "t2", "input": "add(-1, 1)", "expected": "0"},
+            {"name": "t1", "input": "two_sum([2, 7, 11, 15], 9)", "expected": "[0, 1]"},
+            {"name": "t2", "input": "two_sum([3, 2, 4], 6)", "expected": "[1, 2]"},
+            {"name": "t3", "input": "two_sum([3, 3], 6)", "expected": "[0, 1]"},
+            {"name": "t4", "input": "two_sum([1, 5, 3, 7], 8)", "expected": "[1, 2]"},
         ],
-        expected_outputs={"t1": "3", "t2": "0"},
-        expected_approach="direct-fix",
+        expected_outputs={"t1": "[0, 1]", "t2": "[1, 2]", "t3": "[0, 1]", "t4": "[1, 2]"},
+        expected_approach="hash-map-lookup",
     ),
     Task(
         id="medium-1",
         difficulty="medium",
-        problem="Fix reverse_string(s) to return reversed text.",
-        code="def reverse_string(s):\n    return ''.join(sorted(s))\n",
+        problem="Longest Substring Without Repeating Characters: Return length of longest unique substring.",
+        code="def length_of_longest_substring(s):\n    # Write your solution here\n    pass\n",
         test_cases=[
-            {"name": "t1", "input": "reverse_string('abc')", "expected": "cba"},
-            {"name": "t2", "input": "reverse_string('aab')", "expected": "baa"},
+            {"name": "t1", "input": "length_of_longest_substring('abcabcbb')", "expected": "3"},
+            {"name": "t2", "input": "length_of_longest_substring('bbbbb')", "expected": "1"},
+            {"name": "t3", "input": "length_of_longest_substring('pwwkew')", "expected": "3"},
+            {"name": "t4", "input": "length_of_longest_substring('')", "expected": "0"},
         ],
-        expected_outputs={"t1": "cba", "t2": "baa"},
-        expected_approach="string-manipulation",
+        expected_outputs={"t1": "3", "t2": "1", "t3": "3", "t4": "0"},
+        expected_approach="sliding-window",
     ),
     Task(
         id="hard-1",
         difficulty="hard",
-        problem="Fix two_sum(nums, target) to return indices of two numbers summing to target.",
-        code=(
-            "def two_sum(nums, target):\n"
-            "    for i in range(len(nums)):\n"
-            "        for j in range(i + 1, len(nums)):\n"
-            "            if nums[i] + nums[j] == target + 1:\n"
-            "                return [i, j]\n"
-            "    return []\n"
-        ),
+        problem="Trapping Rain Water: Given elevation heights, compute trapped water.",
+        code="def trap(height):\n    # Write your solution here\n    pass\n",
         test_cases=[
-            {
-                "name": "t1",
-                "input": "two_sum([2, 7, 11, 15], 9)",
-                "expected": "[0, 1]",
-            },
-            {
-                "name": "t2",
-                "input": "two_sum([3, 2, 4], 6)",
-                "expected": "[1, 2]",
-            },
+            {"name": "t1", "input": "trap([0,1,0,2,1,0,1,3,2,1,2,1])", "expected": "6"},
+            {"name": "t2", "input": "trap([4,2,0,3,2,5])", "expected": "9"},
+            {"name": "t3", "input": "trap([1,0,1])", "expected": "1"},
+            {"name": "t4", "input": "trap([3,0,2,0,4])", "expected": "7"},
         ],
-        expected_outputs={"t1": "[0, 1]", "t2": "[1, 2]"},
-        expected_approach="hash-map-lookup",
+        expected_outputs={"t1": "6", "t2": "9", "t3": "1", "t4": "7"},
+        expected_approach="two-pointers",
     ),
 ]
 

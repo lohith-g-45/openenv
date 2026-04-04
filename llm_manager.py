@@ -17,9 +17,9 @@ import json
 from typing import Dict, Any, List
 
 try:
-    from groq import Groq
+    from openai import OpenAI
 except ImportError:
-    Groq = None
+    OpenAI = None
 
 # Try to load python-dotenv to read .env file automatically
 try:
@@ -29,23 +29,38 @@ except ImportError:
     pass
 
 class LLMManager:
-    # Use Llama-3.3-70B-Versatile for maximum coding intelligence and accuracy.
-    DEFAULT_MODEL = "llama-3.3-70b-versatile"
+    """
+    LLM Manager using standard OpenAI client for maximum compatibility.
+    Handles Meta Round 1 environment variables (HF_TOKEN, API_BASE_URL, MODEL_NAME).
+    """
 
     def __init__(self):
-        if Groq is None:
-            raise ImportError("The 'groq' package is not installed. Please try 'pip install groq'.")
+        if OpenAI is None:
+            raise ImportError("The 'openai' package is not installed. Please try 'pip install openai'.")
         
-        self.api_key = os.getenv("GROQ_API_KEY")
+        # 1. Check for Meta/Hugging Face compliance (Requirement 4.1)
+        self.api_key = os.getenv("HF_TOKEN")
+        self.base_url = os.getenv("API_BASE_URL")
+        self.model_name = os.getenv("MODEL_NAME")
+
+        # 2. Fallback to local Groq if Meta variables are missing
+        if not self.api_key:
+            self.api_key = os.getenv("GROQ_API_KEY")
+            # Groq's endpoint is OpenAI compatible
+            self.base_url = "https://api.groq.com/openai/v1"
+            self.model_name = "llama-3.1-8b-instant"
+            
         if not self.api_key:
             raise ValueError(
-                "GROQ_API_KEY environment variable is missing. "
-                "Please export GROQ_API_KEY='your_key' before running the pipeline."
+                "Compliance Error: Missing environment variables. "
+                "Ensure HF_TOKEN (or GROQ_API_KEY for local) is set."
             )
-        self.client = Groq(api_key=self.api_key)
+
+        # Initialize standard OpenAI client
+        self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
 
     def _call_llm(self, system_prompt: str, user_prompt: str, json_mode: bool = False) -> str:
-        """Helper to call Groq API"""
+        """Helper to call completion API using standard OpenAI format"""
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt}
@@ -54,10 +69,10 @@ class LLMManager:
         response_format = {"type": "json_object"} if json_mode else None
         
         response = self.client.chat.completions.create(
-            model=self.DEFAULT_MODEL,
+            model=self.model_name,
             messages=messages,
             response_format=response_format,
-            temperature=0.0, # We want deterministic-ish, straight answers
+            temperature=0.0,
         )
         return response.choices[0].message.content
 
@@ -81,22 +96,21 @@ class LLMManager:
         fixed_code = fixed_code.replace("```python", "").replace("```", "").strip()
         return fixed_code
 
-    def generate_test_cases(self, code: str) -> List[Dict[str, Any]]:
+    def generate_test_cases(self, code: str, problem_description: str = "") -> List[Dict[str, Any]]:
         """
-        Reads unknown code, deduces the problem, and generates LeetCode-style test cases.
-        Returns strict JSON list: [{"inputs": [...], "expected": ...}]
+        Reads the problem description (and optionally code) and generates LeetCode-style test cases.
+        Returns strict JSON list: [{"input": "func_call(...)", "expected": "result"}]
         """
+        context = problem_description if problem_description else f"Code:\n{code}"
         sys_prompt = (
-            "You are an algorithm testing oracle. Read the user's Python function. "
-            "Deduce what Leetcode-style problem they are trying to solve. "
-            "Generate exactly 4 edge-case test cases for this function. "
-            "You MUST output valid JSON only. The JSON must be an object with a 'test_cases' key "
-            "containing a list. Each item in the list must have 'inputs' (a list of arguments) "
-            "and 'expected' (the expected return value). "
-            "Example format: {\"test_cases\": [{\"inputs\": [[2,7,11,15], 9], \"expected\": [0,1]}]}"
+            "You are an algorithm testing oracle. Read the problem below. "
+            "Generate exactly 4 diverse test cases including edge cases. "
+            "Return ONLY valid JSON with a 'test_cases' key. "
+            "Each item must have 'input' (a string: the exact function call, e.g. \"two_sum([2,7,11,15], 9)\") "
+            "and 'expected' (string representation of expected return value, e.g. \"[0, 1]\"). "
+            "Example: {\"test_cases\": [{\"input\": \"two_sum([2,7,11,15], 9)\", \"expected\": \"[0, 1]\"}]}"
         )
-        
-        response = self._call_llm(sys_prompt, f"Code:\n{code}", json_mode=True)
+        response = self._call_llm(sys_prompt, context, json_mode=True)
         try:
             data = json.loads(response)
             return data.get("test_cases", [])
@@ -124,6 +138,99 @@ class LLMManager:
         
         explanation = self._call_llm(sys_prompt, user_prompt)
         return explanation
+
+    def get_hint(self, code: str, bugs: List[Dict[str, Any]], attempt_number: int) -> str:
+        """
+        Returns a PROGRESSIVE hint based on how many attempts the student has made.
+        - Attempt 1: Very short, directional hint only
+        - Attempt 2: Slightly more specific hint
+        - Attempt 3+: Full line-by-line diagnosis
+        """
+        if attempt_number == 1:
+            sys_prompt = (
+                "You are a strict but supportive coding tutor. The student just ran their code and it failed.\n"
+                "Give them ONE short sentence hint ONLY. Do NOT explain the full error.\n"
+                "Rules:\n"
+                "- If there is a syntax error: say something like 'Check your syntax carefully — look at line ~X'\n"
+                "- If there is a logic error: say 'Your logic seems off — re-read your return condition'\n"
+                "- If there is a runtime crash: say 'Your code crashed at runtime — check the operation on line ~X'\n"
+                "- If tests failed (wrong output): say 'Your output is incorrect — trace through your code with the first test case'\n"
+                "DO NOT reveal the fix. One sentence only. Be encouraging."
+            )
+        elif attempt_number == 2:
+            sys_prompt = (
+                "You are a coding tutor. The student has tried twice and still fails.\n"
+                "Give them a slightly more specific hint (2-3 sentences max). Still DO NOT reveal the fix.\n"
+                "Rules:\n"
+                "- Point to the general area of the problem (e.g., 'Your loop logic', 'The return statement', 'How you handle the edge case')\n"
+                "- If syntax error: mention the type of syntax issue (e.g., 'Missing colon', 'Wrong indentation')\n"
+                "- If logic error: describe the logical issue conceptually\n"
+                "- If runtime crash: describe what type of error and generally why it happens\n"
+                "Still do NOT give the exact fix or corrected code."
+            )
+        else:
+            sys_prompt = (
+                "You are a coding tutor. The student has used all 3 hints and still hasn't fixed the code.\n"
+                "Now give a COMPLETE line-by-line diagnosis of the error.\n"
+                "Rules:\n"
+                "1. Reference specific line numbers in the student's code\n"
+                "2. Explain exactly what is wrong and why\n"
+                "3. If there is a runtime crash (like ZeroDivisionError), explain that specific line\n"
+                "4. Still DO NOT write the full corrected function — give corrected snippets only\n"
+                "Format with ### 🔍 Full Diagnosis and ### 💡 Correction Hints sections in Markdown."
+            )
+
+        user_prompt = f"Student Code:\n{code}\n\nDetected Issues:\n{json.dumps(bugs, indent=2)}"
+        return self._call_llm(sys_prompt, user_prompt)
+
+    def explain_test_case_failure(self, code: str, test_input: str, expected: str,
+                                   actual: str, is_tle: bool = False) -> str:
+        """
+        Explains WHY a specific test case failed — either wrong output or time limit exceeded.
+        This is SEPARATE from syntax/logic error explanation.
+        """
+        if is_tle:
+            sys_prompt = (
+                "You are a performance coaching tutor. The student's code timed out (exceeded time limit).\n"
+                "Explain why their approach is too slow and give a conceptual hint for a faster approach.\n"
+                "Rules:\n"
+                "1. Identify the likely complexity (e.g., O(n²)) from their code\n"
+                "2. Explain why that complexity causes TLE\n"
+                "3. Give a 1-sentence direction hint (e.g., 'Consider using a hash map for O(1) lookups')\n"
+                "Do NOT write the optimized code. Keep the response under 6 lines."
+            )
+            user_prompt = f"Student Code (TLE):\n{code}"
+        else:
+            sys_prompt = (
+                "You are a debugging tutor. A test case failed — the student's code produced wrong output.\n"
+                "Explain WHY the test case failed based on their code logic.\n"
+                "Rules:\n"
+                "1. Show the test: input, expected output, and actual wrong output\n"
+                "2. Trace through their code with that specific input to explain where it goes wrong\n"
+                "3. Give a hint about what logic change is needed — NOT the full fix\n"
+                "Keep it concise (under 8 lines). Use Markdown."
+            )
+            user_prompt = (
+                f"Student Code:\n{code}\n\n"
+                f"Test Input: {test_input}\n"
+                f"Expected Output: {expected}\n"
+                f"Actual Output (wrong): {actual}"
+            )
+        return self._call_llm(sys_prompt, user_prompt)
+
+    def explain_bugs(self, code: str, bugs: List[Dict[str, Any]]) -> str:
+        """Legacy full-detail explanation (used when user explicitly requests it after 3 hints)."""
+        sys_prompt = (
+            "You are a coding tutor giving a FINAL full-detail diagnosis.\n"
+            "The student requested full details after exhausting their hints.\n"
+            "Give a complete line-by-line breakdown:\n"
+            "1. Reference each specific line number\n"
+            "2. Explain what is wrong and why (syntax, logic, runtime)\n"
+            "3. Give corrected code snippets (NOT the full function)\n"
+            "Format with ### 🔍 Diagnosis, ### 📍 Line-by-Line, ### 💡 Fix Hints in Markdown."
+        )
+        user_prompt = f"Student Code:\n{code}\n\nDetected Issues:\n{json.dumps(bugs, indent=2)}"
+        return self._call_llm(sys_prompt, user_prompt)
 
 
     def generate_optimal_code(self, code: str) -> Dict[str, Any]:

@@ -12,7 +12,7 @@ Master Pipeline:
 """
 
 import ast
-from typing import Dict, Any, Optional
+from typing import List, Dict, Any, Optional
 
 from analysis import BugDetector, analyze_code
 from repair_engine import RepairEngine
@@ -42,31 +42,130 @@ def _is_valid_python(code: str) -> bool:
     except SyntaxError:
         return False
 
-def process_submission(code: str) -> Dict[str, Any]:
+from analysis import BugDetector, analyze_code
+
+# ... existing code ...
+
+def _get_function_name(code: str) -> str:
+    try:
+        tree = ast.parse(code)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                return node.name
+    except:
+        pass
+    return "solution"
+
+def process_submission(code: str, test_cases: List[Dict[str, Any]] = None,
+                       attempt_number: int = 1, want_full_explanation: bool = False) -> Dict[str, Any]:
     """
-    Runs the HYBRID end-to-end evaluation pipeline.
-    LLM Handles: Test Cases, Complex Syntax Repair, Dynamic Explanations.
-    Deterministic Engine Handles: Safe Sandbox Execution, Big-O Analysis, Optimization Templates.
+    Runs the HYBRID end-to-end evaluation pipeline with AI Tutor v2 progressive hints.
     """
     llm = get_llm()
+    if test_cases is None:
+        test_cases = []
+    
+    # 1. Static Analysis
+    original_bugs = BugDetector.analyze(code)
+    all_errors = (original_bugs.get("syntax_errors", []) +
+                  original_bugs.get("logical_errors", []) +
+                  original_bugs.get("edge_case_risks", []))
+
+    # 2. Run Tests on Original Code to find runtime errors
+    func_name = _get_function_name(code)
+    initial_test_results = run_test_cases(code, func_name, test_cases)
+    
+    # 3. Capture Runtime Tracebacks/Crashes
+    runtime_bugs = []
+    first_failed_tc = None
+    is_tle = False
+
+    for tc_res in initial_test_results.get("results", []):
+        if tc_res.get("error"):
+            err_msg = tc_res["error"]
+            runtime_bugs.append({
+                "type": "RuntimeError",
+                "message": err_msg,
+                "test_case": tc_res.get("test_id"),
+                "severity": "critical"
+            })
+            if first_failed_tc is None:
+                first_failed_tc = tc_res
+            # Detect TLE by checking error message
+            if "TimeoutError" in err_msg or "timed out" in err_msg.lower():
+                is_tle = True
+            break 
+        elif not tc_res.get("passed") and first_failed_tc is None:
+            first_failed_tc = tc_res
+
+    original_bugs["runtime_errors"] = runtime_bugs
+    all_errors = all_errors + runtime_bugs
+
+    has_errors = len(all_errors) > 0
+    has_test_failures = initial_test_results.get("failed", 0) > 0
+
+    # 4. AI Tutor — Progressive Hint System
+    #    Two distinct modes: (A) Error mode,  (B) Test-failure mode
+    bug_explanation = None
+    failure_explanation = None
+
+    if llm and (has_errors or has_test_failures):
+        try:
+            # MODE A: Code has error (syntax / logic / runtime crash)
+            if has_errors:
+                if want_full_explanation:
+                    bug_explanation = llm.explain_bugs(code, all_errors)
+                else:
+                    bug_explanation = llm.get_hint(code, all_errors, attempt_number)
+
+            # MODE B: No code error, but a test case produced wrong output or TLE
+            elif has_test_failures and first_failed_tc is not None:
+                actual_output = str(first_failed_tc.get("actual", "N/A"))
+                expected_output = str(first_failed_tc.get("expected", "N/A"))
+                test_input = str(first_failed_tc.get("input", "N/A"))
+                failure_explanation = llm.explain_test_case_failure(
+                    code=code,
+                    test_input=test_input,
+                    expected=expected_output,
+                    actual=actual_output,
+                    is_tle=is_tle
+                )
+        except Exception as e:
+            print(f"WARNING: LLM tutor failed: {e}")
+
+    # 5. Initialize result with the initial findings
     result = {
         "original_code": code,
         "fixed_code": code,
+        "original_bugs": original_bugs,
+        "bug_explanation": bug_explanation,         # Error hints (progressive)
+        "failure_explanation": failure_explanation,  # Test case failure reason
+        "attempt_number": attempt_number,
+        "hints_exhausted": attempt_number >= 3,
+        "test_results": initial_test_results,
         "repair_report": "",
-        "syntax_valid": False,
-        "test_cases": [],
-        "execution_summary": None,
-        "analysis": None,
+        "syntax_valid": len(original_bugs.get("syntax_errors", [])) == 0,
+        "test_cases": initial_test_results.get("results") or [],
+        "execution_summary": {
+            "passed": initial_test_results.get("passed", 0),
+            "total": initial_test_results.get("total", 0)
+        },
+        "analysis": {
+            "time_complexity": "Unknown",
+            "space_complexity": "Unknown",
+            "approach": "Unknown",
+            "summary": ""
+        },
         "optimization": None,
         "dynamic_explanation": None,
         "fallback_mode": False
     }
 
-    # 1. ATTEMPT REPAIR (Deterministic First, LLM Second)
+    # 6. ATTEMPT REPAIR & OPTIMIZATION (ONLY if it was worth repairing)
+    is_syntax_valid = result["syntax_valid"]
     fixed_code, is_syntax_valid, repair_report = RepairEngine.attempt_repair(code)
     
     if not is_syntax_valid and llm:
-        repair_report += "\n[LLM] Attempting structural syntax repair..."
         try:
             fixed_code = llm.fix_code_syntax(code)
             if _is_valid_python(fixed_code):

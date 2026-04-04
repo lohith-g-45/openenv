@@ -10,3 +10,4 @@ COPY . .
 EXPOSE 7860
 
 CMD ["python", "-m", "server.app"]
+
