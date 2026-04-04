@@ -187,7 +187,7 @@ class BugDetector:
                     return True
             return False
 
-        EdgeCaseVisitor().visit(risks)   # won't work — see fix below
+            EdgeCaseVisitor().visit(tree)
         return risks
 
     @classmethod
@@ -203,77 +203,6 @@ class BugDetector:
             "has_critical_bugs": any(i["severity"] == "critical" for i in all_issues),
             "total_issues": len(all_issues),
         }
-
-
-# Fix: EdgeCaseVisitor.visit should visit the tree, not risks list
-def _bug_detect_edge(code: str) -> List[Dict]:
-    """Standalone edge-case detection (correct version)."""
-    risks = []
-    try:
-        tree = ast.parse(code)
-    except SyntaxError:
-        return risks
-
-    LIST_ARG_NAMES = {
-        "nums", "arr", "lst", "items", "values", "array",
-        "numbers", "graph", "edges", "matrix", "grid",
-    }
-
-    def _is_falsy_check(test_node, arg_names):
-        if isinstance(test_node, ast.UnaryOp) and isinstance(test_node.op, ast.Not):
-            if isinstance(test_node.operand, ast.Name):
-                return test_node.operand.id in arg_names
-        if isinstance(test_node, ast.Compare):
-            if (isinstance(test_node.left, ast.Call) and
-                    isinstance(test_node.left.func, ast.Name) and
-                    test_node.left.func.id == "len"):
-                return True
-        return False
-
-    for node in ast.walk(tree):
-        if isinstance(node, ast.FunctionDef):
-            args = [a.arg for a in node.args.args]
-            list_args = [a for a in args if a in LIST_ARG_NAMES]
-            if list_args:
-                has_empty_check = any(
-                    isinstance(n, ast.If) and _is_falsy_check(n.test, list_args)
-                    for n in ast.walk(node)
-                )
-                if not has_empty_check:
-                    risks.append({
-                        "type": "EdgeCaseRisk",
-                        "line": node.lineno,
-                        "message": (
-                            f"Function '{node.name}' takes list arg "
-                            f"{list_args} but has no empty-list guard"
-                        ),
-                        "severity": "info",
-                    })
-            for child in ast.walk(node):
-                if isinstance(child, ast.BinOp) and isinstance(child.op, (ast.Div, ast.Mod)):
-                    risks.append({
-                        "type": "EdgeCaseRisk",
-                        "line": getattr(child, "lineno", node.lineno),
-                        "message": "Division/modulo detected — ensure divisor != 0",
-                        "severity": "info",
-                    })
-                    break
-        if isinstance(node, ast.Subscript):
-            if isinstance(node.slice, ast.Constant) and isinstance(node.slice.value, int):
-                if node.slice.value > 1:
-                    risks.append({
-                        "type": "EdgeCaseRisk",
-                        "line": getattr(node, "lineno", None),
-                        "message": f"Direct index [{node.slice.value}] — verify list length",
-                        "severity": "info",
-                    })
-
-    return risks
-
-
-# Patch BugDetector to use the fixed function
-BugDetector.detect_edge_case_risks = staticmethod(_bug_detect_edge)
-
 
 # ===========================================================================
 # SECTION 2 — APPROACH CLASSIFICATION  (Phase 1: 10 approaches)

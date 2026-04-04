@@ -1,0 +1,158 @@
+openenv:
+  name: Intelligent Code Evaluation and Optimization Environment
+  version: 1.0.0
+  deterministic: true
+  state_schema:
+    type: object
+    required:
+      - code
+      - test_results
+      - error_type
+      - analysis
+    properties:
+      code:
+        type: string
+      test_results:
+        type: object
+        additionalProperties:
+          type: string
+      error_type:
+        type: string
+      analysis:
+        type: object
+        additionalProperties:
+          type: string
+
+  action_space:
+    - run_tests
+    - detect_bug
+    - classify_approach
+    - analyze_complexity
+    - suggest_optimization
+    - generate_code
+
+  step_response:
+    type: tuple
+    items:
+      - name: next_state
+        schema_ref: '#/openenv/state_schema'
+      - name: reward
+        type: number
+      - name: done
+        type: boolean
+      - name: info
+        type: object
+        additionalProperties:
+          type: string
+
+api:
+  base_path: /
+  endpoints:
+    - path: /reset
+      method: POST
+      request_model: ResetRequest
+      response_model: ResetResponse
+    - path: /step
+      method: POST
+      request_model: StepRequest
+      response_model: StepResponse
+    - path: /state
+      method: GET
+      request_model: null
+      response_model: StateResponse
+    - path: /submit
+      method: POST
+      request_model: SubmitRequest
+      response_model: SubmitResponse
+
+models:
+  ResetRequest:
+    type: object
+    properties:
+      difficulty:
+        type: string
+        enum: [easy, medium, hard]
+        nullable: true
+
+  StateModel:
+    type: object
+    required: [code, test_results, error_type, analysis]
+    properties:
+      code:
+        type: string
+      test_results:
+        type: object
+        additionalProperties:
+          type: string
+      error_type:
+        type: string
+      analysis:
+        type: object
+        additionalProperties:
+          type: string
+
+  ResetResponse:
+    type: object
+    required: [state, task_id, problem]
+    properties:
+      state:
+        $ref: '#/models/StateModel'
+      task_id:
+        type: string
+      problem:
+        type: string
+
+  StepRequest:
+    type: object
+    required: [action]
+    properties:
+      action:
+        type: string
+        enum:
+          - run_tests
+          - detect_bug
+          - classify_approach
+          - analyze_complexity
+          - suggest_optimization
+          - generate_code
+
+  StepResponse:
+    type: object
+    required: [next_state, reward, done, info]
+    properties:
+      next_state:
+        $ref: '#/models/StateModel'
+      reward:
+        type: number
+      done:
+        type: boolean
+      info:
+        type: object
+        additionalProperties:
+          type: string
+
+  StateResponse:
+    type: object
+    required: [state, task_id, problem]
+    properties:
+      state:
+        $ref: '#/models/StateModel'
+      task_id:
+        type: string
+      problem:
+        type: string
+
+  SubmitRequest:
+    type: object
+    required: [code]
+    properties:
+      code:
+        type: string
+
+  SubmitResponse:
+    type: object
+    required: [result]
+    properties:
+      result:
+        type: object
+        additionalProperties: true

@@ -11,6 +11,7 @@ Master Pipeline:
 4. (Fallback): If unfixable, use string heuristics to guess approach and provide solutions
 """
 
+import ast
 from typing import Dict, Any, Optional
 
 from analysis import BugDetector, analyze_code
@@ -32,6 +33,14 @@ def get_llm() -> Optional[Any]:
         return LLMManager()
     except (ImportError, ValueError):
         return None
+
+
+def _is_valid_python(code: str) -> bool:
+    try:
+        ast.parse(code)
+        return True
+    except SyntaxError:
+        return False
 
 def process_submission(code: str) -> Dict[str, Any]:
     """
@@ -57,13 +66,17 @@ def process_submission(code: str) -> Dict[str, Any]:
     fixed_code, is_syntax_valid, repair_report = RepairEngine.attempt_repair(code)
     
     if not is_syntax_valid and llm:
-        repair_report += r"\n🤖 Groq LLM activated to heal structural syntax errors..."
+        repair_report += "\n[LLM] Attempting structural syntax repair..."
         try:
             fixed_code = llm.fix_code_syntax(code)
-            is_syntax_valid = True
-            repair_report += r"\n✅ LLM repaired syntax successfully!"
+            if _is_valid_python(fixed_code):
+                is_syntax_valid = True
+                repair_report += "\n[OK] LLM repaired syntax successfully."
+            else:
+                is_syntax_valid = False
+                repair_report += "\n[FAIL] LLM returned code that is still invalid Python syntax."
         except Exception as e:
-            repair_report += fr"\n❌ LLM repair failed: {str(e)}"
+            repair_report += f"\n[FAIL] LLM repair failed: {str(e)}"
             
     result["fixed_code"] = fixed_code
     result["syntax_valid"] = is_syntax_valid
@@ -80,7 +93,6 @@ def process_submission(code: str) -> Dict[str, Any]:
         
         # 3. EXECUTE CODE (Deterministic Sandbox - safe from infinite loops)
         # We need the function name. A simple ast parse helps:
-        import ast
         func_name = "solution"
         try:
             for n in ast.walk(ast.parse(fixed_code)):
