@@ -37,18 +37,18 @@ class LLMManager:
             raise ImportError("The 'openai' package is not installed. Please try 'pip install openai'.")
         
         # Phase-2 compliance: all LLM traffic must go through injected proxy.
-        self.base_url = os.getenv("API_BASE_URL")
-        self.api_key = os.getenv("API_KEY")
-        self.model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
-
-        if not self.base_url or not self.api_key:
+        try:
+            self.base_url = os.environ["API_BASE_URL"]
+            self.api_key = os.environ["API_KEY"]
+        except KeyError as exc:
             raise ValueError(
                 "Compliance Error: Missing required environment variables. "
                 "Ensure API_BASE_URL and API_KEY are set."
-            )
+            ) from exc
+        self.model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
 
         # Initialize standard OpenAI client
-        self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+        self.client = OpenAI(base_url=os.environ["API_BASE_URL"], api_key=os.environ["API_KEY"])
 
     def _call_llm(self, system_prompt: str, user_prompt: str, json_mode: bool = False) -> str:
         """Helper to call completion API using standard OpenAI format"""

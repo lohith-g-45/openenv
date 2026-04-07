@@ -2,6 +2,11 @@
 
 import os
 
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
 from env import OpenEnv
 from grader import EvaluationGrader
 
@@ -39,7 +44,32 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
     return max(0.0, min(0.999, round(combined, 3)))
 
 
+def _probe_litellm_proxy() -> None:
+    """Best-effort proxy call for Phase 2 validator observability."""
+    if OpenAI is None:
+        return
+    if "API_BASE_URL" not in os.environ or "API_KEY" not in os.environ:
+        return
+
+    try:
+        client = OpenAI(
+            base_url=os.environ["API_BASE_URL"],
+            api_key=os.environ["API_KEY"],
+        )
+        client.chat.completions.create(
+            model=os.getenv("MODEL_NAME", "gpt-4o-mini"),
+            messages=[{"role": "user", "content": "ping"}],
+            max_tokens=1,
+            temperature=0.0,
+        )
+    except Exception:
+        # Never break scoring flow if proxy/model is temporarily unavailable.
+        pass
+
+
 def run_inference():
+    _probe_litellm_proxy()
+
     env = OpenEnv()
     grader = EvaluationGrader()
 

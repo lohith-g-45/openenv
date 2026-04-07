@@ -358,7 +358,7 @@ def generate_test_cases(
     difficulty: str = Query(default="easy", description="Problem difficulty: easy, medium, hard")
 ):
     """
-    Uses Groq LLM to generate 4 dynamic test cases for the given problem difficulty.
+    Uses the configured OpenAI-compatible LLM client to generate 4 dynamic test cases.
     Returns JSON: {"test_cases": [{"input": "...", "expected": "..."}]}
     """
     from llm_manager import LLMManager
