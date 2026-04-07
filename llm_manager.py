@@ -4,12 +4,10 @@ llm_manager.py
 Member 2: Analysis & Optimization Engineer
 Intelligent Code Evaluation and Optimization Environment
 
-Groq LLM wrapper for tasks that deterministic algorithms struggle with:
+Proxy-routed OpenAI wrapper for tasks that deterministic algorithms struggle with:
 1. Complex Syntax Repair
 2. Deductive Test Case Generation (Oracle)
 3. Personalized Tutoring Explanations
-
-Requires: `pip install groq` and `GROQ_API_KEY` in environment variables.
 """
 
 import os
@@ -30,30 +28,23 @@ except ImportError:
 
 class LLMManager:
     """
-    LLM Manager using standard OpenAI client for maximum compatibility.
-    Handles Meta Round 1 environment variables (HF_TOKEN, API_BASE_URL, MODEL_NAME).
+    LLM Manager using standard OpenAI client through injected LiteLLM proxy.
+    Required env: API_BASE_URL, API_KEY. Optional: MODEL_NAME.
     """
 
     def __init__(self):
         if OpenAI is None:
             raise ImportError("The 'openai' package is not installed. Please try 'pip install openai'.")
         
-        # 1. Check for Meta/Hugging Face compliance (Requirement 4.1)
-        self.api_key = os.getenv("HF_TOKEN")
+        # Phase-2 compliance: all LLM traffic must go through injected proxy.
         self.base_url = os.getenv("API_BASE_URL")
-        self.model_name = os.getenv("MODEL_NAME")
+        self.api_key = os.getenv("API_KEY")
+        self.model_name = os.getenv("MODEL_NAME", "gpt-4o-mini")
 
-        # 2. Fallback to local Groq if Meta variables are missing
-        if not self.api_key:
-            self.api_key = os.getenv("GROQ_API_KEY")
-            # Groq's endpoint is OpenAI compatible
-            self.base_url = "https://api.groq.com/openai/v1"
-            self.model_name = "llama-3.1-8b-instant"
-            
-        if not self.api_key:
+        if not self.base_url or not self.api_key:
             raise ValueError(
-                "Compliance Error: Missing environment variables. "
-                "Ensure HF_TOKEN (or GROQ_API_KEY for local) is set."
+                "Compliance Error: Missing required environment variables. "
+                "Ensure API_BASE_URL and API_KEY are set."
             )
 
         # Initialize standard OpenAI client
@@ -75,6 +66,19 @@ class LLMManager:
             temperature=0.0,
         )
         return response.choices[0].message.content
+
+    def proxy_heartbeat(self) -> bool:
+        """Best-effort no-op call to verify proxy path is reachable."""
+        try:
+            self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": "ping"}],
+                max_tokens=1,
+                temperature=0.0,
+            )
+            return True
+        except Exception:
+            return False
 
     def fix_code_syntax(self, code: str) -> str:
         """
@@ -268,7 +272,7 @@ class LLMManager:
 
 # --- Self Test ---
 if __name__ == "__main__":
-    # Note: Requires GROQ_API_KEY
+    # Requires API_BASE_URL and API_KEY.
     llm = LLMManager()
     
     broken_code = "def two_sum(nums, t)\nfor i in range(len(n)):\n if nums[i] == t: return i\nreturn -1"

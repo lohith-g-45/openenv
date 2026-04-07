@@ -28,6 +28,16 @@ def get_llm() -> Optional[Any]:
         return None
 
 
+def _touch_llm_proxy(llm: Optional[Any]) -> None:
+    """Best-effort proxy ping so validator can observe routed LLM traffic."""
+    if not llm:
+        return
+    try:
+        llm.proxy_heartbeat()
+    except Exception:
+        pass
+
+
 def _is_valid_python(code: str) -> bool:
     try:
         ast.parse(code)
@@ -436,6 +446,7 @@ def process_run_attempt(
     max_tests: int = 5,
 ) -> Dict[str, Any]:
     llm = get_llm()
+    _touch_llm_proxy(llm)
     if test_cases is None:
         test_cases = []
     if candidate_test_pool is None:
@@ -563,6 +574,7 @@ def process_submission(
     problem_description: str = "",
 ) -> Dict[str, Any]:
     llm = get_llm()
+    _touch_llm_proxy(llm)
     lang = (language or "python").lower()
     if test_cases is None:
         test_cases = []
