@@ -5,7 +5,9 @@ class EvaluationGrader:
     Deterministic grader for Intelligent Code Evaluation and Optimization Environment
     """
 
-    def evaluate(self, state: dict, task: dict) -> float:
+    _EPS = 1e-3
+
+    def evaluate(self, state: dict, task: dict | None = None) -> float:
         """
         Returns a final score in range [0.0, 1.0]
         """
@@ -27,7 +29,7 @@ class EvaluationGrader:
             0.4 * optimization_score
         )
 
-        return max(0.0, min(1.0, score))
+        return max(self._EPS, min(1.0 - self._EPS, score))
 
 
 if __name__ == "__main__":

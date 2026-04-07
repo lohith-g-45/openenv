@@ -2,6 +2,19 @@ openenv:
   name: Intelligent Code Evaluation and Optimization Environment
   version: 1.0.0
   deterministic: true
+  scoring:
+    min_exclusive: 0.0
+    max_exclusive: 1.0
+  tasks:
+    - id: easy-1
+      difficulty: easy
+      grader: EvaluationGrader
+    - id: medium-1
+      difficulty: medium
+      grader: EvaluationGrader
+    - id: hard-1
+      difficulty: hard
+      grader: EvaluationGrader
   state_schema:
     type: object
     required:

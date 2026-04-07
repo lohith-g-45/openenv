@@ -11,6 +11,7 @@ class Task:
     test_cases: List[Dict[str, str]]
     expected_outputs: Dict[str, str]
     expected_approach: str
+    grader: str = "EvaluationGrader"
     hidden_test_cases: List[Dict[str, str]] = field(default_factory=list)
     starter_code: Dict[str, str] = field(default_factory=dict)
 
@@ -39,6 +40,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "[0, 1]", "t2": "[1, 2]", "t3": "[0, 1]", "t4": "[1, 2]"},
         expected_approach="hash-map-lookup",
+        grader="EvaluationGrader",
         starter_code={
             "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -83,6 +85,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "3", "t2": "1", "t3": "3", "t4": "0"},
         expected_approach="sliding-window",
+        grader="EvaluationGrader",
         starter_code={
             "python": "def length_of_longest_substring(s):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -126,6 +129,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "6", "t2": "9", "t3": "1", "t4": "7"},
         expected_approach="two-pointers",
+        grader="EvaluationGrader",
         starter_code={
             "python": "def trap(height):\n    # Write your solution here\n    pass\n",
             "c": (
