@@ -1,7 +1,18 @@
 # inference.py
 
+import os
+
 from env import OpenEnv
 from grader import EvaluationGrader
+
+
+# Required environment variables for submission checks.
+# HF_TOKEN is intentionally optional and has no default.
+API_BASE_URL = os.getenv("API_BASE_URL", "https://api-inference.huggingface.co/models")
+MODEL_NAME = os.getenv("MODEL_NAME", "meta-llama/Llama-3.1-8B-Instruct")
+HF_TOKEN = os.getenv("HF_TOKEN")
+# Optional only when using from_docker_image().
+LOCAL_IMAGE_NAME = os.getenv("LOCAL_IMAGE_NAME")
 
 
 DIFFICULTY_FACTORS = {
