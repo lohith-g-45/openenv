@@ -2,7 +2,7 @@ from pathlib import Path
 import ast
 import json
 import re
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Body, FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse, RedirectResponse
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -228,9 +228,11 @@ def workspace_submit(request: DatasetSubmitRequest):
 
 
 @app.post("/reset", response_model=ResetResponse)
-def reset_environment(request: ResetRequest) -> ResetResponse:
+def reset_environment(request: Optional[ResetRequest] = Body(default=None)) -> ResetResponse:
     try:
-        payload = env.reset(difficulty=request.difficulty, language=request.language)
+        difficulty = request.difficulty if request is not None else None
+        language = request.language if request is not None else "python"
+        payload = env.reset(difficulty=difficulty, language=language)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
