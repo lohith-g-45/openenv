@@ -118,7 +118,7 @@ class LLMManager:
             print("WARNING: LLM failed to return valid JSON test cases.")
             return []
 
-    def generate_explanation(self, buggy_code: str, optimized_code: str, original_time: str, opt_time: str) -> str:
+    def generate_explanation(self, buggy_code: str, optimized_code: str, original_time: str, opt_time: str, language: str = "python") -> str:
         """
         Generates a personalized, highly-detailed tutoring explanation comparing their code to the optimized version.
         """
@@ -134,7 +134,11 @@ class LLMManager:
             "Do not just talk about Big-O; explain the deep logic and mechanics of the approach."
         )
         
-        user_prompt = f"Original Code ({original_time}):\n{buggy_code}\n\nOur Optimized Template ({opt_time}):\n{optimized_code}"
+        user_prompt = (
+            f"Language: {language}\n"
+            f"Original Code ({original_time}):\n{buggy_code}\n\n"
+            f"Our Optimized Template ({opt_time}):\n{optimized_code}"
+        )
         
         explanation = self._call_llm(sys_prompt, user_prompt)
         return explanation
@@ -233,7 +237,7 @@ class LLMManager:
         return self._call_llm(sys_prompt, user_prompt)
 
 
-    def generate_optimal_code(self, code: str) -> Dict[str, Any]:
+    def generate_optimal_code(self, code: str, language: str = "python") -> Dict[str, Any]:
         """
         Synthesizes the optimal approach organically from LLaMa-3 instead of using a hardcoded template.
         Returns a strict JSON Dict: {
@@ -245,13 +249,13 @@ class LLMManager:
         """
         sys_prompt = (
             "You are a world-class senior algorithm engineer at a top-tier tech company. "
-            "Your task is to rewrite the following Python code to be as efficient as possible. "
+            f"Your task is to rewrite the following {language} code to be as efficient as possible. "
             "You must handle all edge cases (empty lists, single elements, etc.) correctly. "
             "Return ONLY a strictly valid JSON object with these exact keys: "
             "'approach' (Clear name of the optimization pattern used), "
             "'time_complexity' (Mathematically correct Big-O, e.g., O(n)), "
             "'space_complexity' (Mathematically correct Big-O, e.g., O(1)), "
-            "'optimized_code' (Clean, production-grade Python code without comments unless necessary). "
+            f"'optimized_code' (Clean, production-grade {language} code without comments unless necessary). "
             "Ensure the code is a complete, runnable function with the same name as the original. "
         )
         

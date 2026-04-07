@@ -64,6 +64,10 @@ api:
       method: POST
       request_model: SubmitRequest
       response_model: SubmitResponse
+    - path: /run
+      method: POST
+      request_model: RunRequest
+      response_model: RunResponse
 
 models:
   ResetRequest:
@@ -73,6 +77,9 @@ models:
         type: string
         enum: [easy, medium, hard]
         nullable: true
+      language:
+        type: string
+        enum: [python, c, java]
 
   StateModel:
     type: object
@@ -148,6 +155,9 @@ models:
     properties:
       code:
         type: string
+      language:
+        type: string
+        enum: [python, c, java]
 
   SubmitResponse:
     type: object
@@ -156,3 +166,81 @@ models:
       result:
         type: object
         additionalProperties: true
+
+  DiagnosticModel:
+    type: object
+    required: [error_type, message, severity]
+    properties:
+      error_type:
+        type: string
+      line:
+        type: integer
+        nullable: true
+      column:
+        type: integer
+        nullable: true
+      message:
+        type: string
+      severity:
+        type: string
+
+  RunRequest:
+    type: object
+    required: [code]
+    properties:
+      code:
+        type: string
+      language:
+        type: string
+        enum: [python, c, java]
+      attempt_number:
+        type: integer
+        minimum: 1
+      want_full_explanation:
+        type: boolean
+
+  RunResultModel:
+    type: object
+    required:
+      - mode
+      - syntax_valid
+      - function_name
+      - diagnostics
+      - run_test_summary
+      - top_test_cases
+    properties:
+      mode:
+        type: string
+        enum: [run]
+      syntax_valid:
+        type: boolean
+      language:
+        type: string
+        enum: [python, c, java]
+      function_name:
+        type: string
+      diagnostics:
+        type: array
+        items:
+          $ref: '#/models/DiagnosticModel'
+      bug_explanation:
+        type: string
+        nullable: true
+      failure_explanation:
+        type: string
+        nullable: true
+      run_test_summary:
+        type: object
+        additionalProperties: true
+      top_test_cases:
+        type: array
+        items:
+          type: object
+          additionalProperties: true
+
+  RunResponse:
+    type: object
+    required: [result]
+    properties:
+      result:
+        $ref: '#/models/RunResultModel'

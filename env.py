@@ -6,7 +6,7 @@ from analysis import BugDetector, analyze_code
 from execution_engine import run_test_cases
 from optimization_engine import optimize_code
 from repair_engine import RepairEngine
-from tasks import Task, get_tasks
+from tasks import Task, get_starter_code, get_tasks
 
 
 ACTIONS: List[str] = [
@@ -60,7 +60,7 @@ class OpenEnv:
             analysis={},
         )
 
-    def reset(self, difficulty: str | None = None) -> Dict[str, object]:
+    def reset(self, difficulty: str | None = None, language: str = "python") -> Dict[str, object]:
         candidates = [t for t in self.tasks if difficulty is None or t.difficulty == difficulty]
         if not candidates:
             raise ValueError("No task found for requested difficulty")
@@ -72,13 +72,14 @@ class OpenEnv:
         self._last_analysis = None
         self._last_optimization = None
         self._state = OpenEnvState(
-            code=selected.code,
+            code=get_starter_code(selected, language),
             test_results={case["name"]: "not_run" for case in selected.test_cases},
             error_type="unknown",
             analysis={
                 "problem": selected.problem,
                 "difficulty": selected.difficulty,
                 "expected_approach": selected.expected_approach,
+                "language": language,
             },
         )
         return self.state()
@@ -95,6 +96,36 @@ class OpenEnv:
             "state": self._state.as_dict(),
             "task_id": self.current_task.id,
             "problem": self.current_task.problem,
+        }
+
+    def expected_function_name(self) -> str:
+        if self.current_task is None or not self.current_task.test_cases:
+            return "solution"
+
+        expression = str(self.current_task.test_cases[0].get("input", ""))
+        try:
+            parsed = ast.parse(expression, mode="eval")
+            if isinstance(parsed.body, ast.Call) and isinstance(parsed.body.func, ast.Name):
+                return parsed.body.func.id
+        except Exception:
+            return "solution"
+        return "solution"
+
+    def current_task_context(self) -> Dict[str, str]:
+        if self.current_task is None:
+            return {
+                "task_id": "",
+                "problem": "",
+                "difficulty": "",
+                "expected_function": "solution",
+            }
+
+        return {
+            "task_id": self.current_task.id,
+            "problem": self.current_task.problem,
+            "difficulty": self.current_task.difficulty,
+            "expected_function": self.expected_function_name(),
+            "language": self._state.analysis.get("language", "python"),
         }
 
     def step(self, action: str) -> Tuple[Dict[str, object], float, bool, Dict[str, str]]:
@@ -235,12 +266,16 @@ class OpenEnv:
 
         return candidate_code
 
-    def _build_runtime_test_cases(self) -> List[Dict[str, Any]]:
+    def _build_runtime_test_cases(self, limit: int | None = None, use_hidden: bool = False) -> List[Dict[str, Any]]:
         if self.current_task is None:
             return []
 
+        source_cases = self.current_task.hidden_test_cases if (use_hidden and self.current_task.hidden_test_cases) else self.current_task.test_cases
+        if limit is not None:
+            source_cases = source_cases[:limit]
+
         cases: List[Dict[str, Any]] = []
-        for tc in self.current_task.test_cases:
+        for tc in source_cases:
             call_expr = str(tc.get("input", ""))
             expected_raw = tc.get("expected")
             cases.append(

@@ -673,6 +673,26 @@ class ComplexityAnalyzer:
         return False
 
     @staticmethod
+    def _has_expensive_builtin_inside_loop(tree: ast.AST) -> bool:
+        """Detect max/min/sum over slices or comprehensions inside loops."""
+        expensive = {"max", "min", "sum", "sorted"}
+        for loop in ast.walk(tree):
+            if not isinstance(loop, (ast.For, ast.While)):
+                continue
+            for node in ast.walk(loop):
+                if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+                    continue
+                if node.func.id not in expensive or not node.args:
+                    continue
+
+                arg0 = node.args[0]
+                if isinstance(arg0, ast.Subscript):
+                    return True
+                if isinstance(arg0, (ast.ListComp, ast.GeneratorExp, ast.SetComp, ast.DictComp)):
+                    return True
+        return False
+
+    @staticmethod
     def _uses_sorting(tree: ast.AST) -> bool:
         for node in ast.walk(tree):
             if isinstance(node, ast.Call):
@@ -834,6 +854,7 @@ class ComplexityAnalyzer:
         has_rec     = cls._has_recursion(tree)
         has_memo    = cls._has_memoization(code)
         sort_in_loop = cls._uses_sorting_inside_loop(tree)
+        expensive_builtin_in_loop = cls._has_expensive_builtin_inside_loop(tree)
         uses_sort   = cls._uses_sorting(tree)
         has_bisect  = cls._has_bisect(tree, code)
         ds_counts   = cls._count_new_data_structures(tree)
@@ -869,6 +890,15 @@ class ComplexityAnalyzer:
                 "time_complexity":  "O(n^2 log n)",
                 "space_complexity": "O(log n)",
                 "explanation":      "Sorting called inside a loop: O(n) iterations * O(n log n) sort = O(n^2 log n). Move sort outside the loop!",
+                "confidence":       "high",
+                "method":           "static_rules",
+            }
+
+        if expensive_builtin_in_loop and loop_depth >= 1:
+            return {
+                "time_complexity":  "O(n^2)",
+                "space_complexity": "O(1)",
+                "explanation":      "Expensive builtins (max/min/sum/sorted) over slices/comprehensions inside a loop imply nested work, typically O(n^2).",
                 "confidence":       "high",
                 "method":           "static_rules",
             }

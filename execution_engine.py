@@ -12,12 +12,17 @@ Responsibilities:
 """
 
 import ast
+import os
 import sys
 import io
 import time
 import traceback
 import signal
 import threading
+import tempfile
+import subprocess
+import shutil
+import re
 from typing import Any, Dict, List, Optional, Tuple
 
 
@@ -335,6 +340,357 @@ def run_test_cases(
         summary["results"].append(tc_result)
 
     return summary
+
+
+def _python_to_c_literal(value: Any) -> str:
+    if isinstance(value, str):
+        escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{escaped}"'
+    if isinstance(value, list):
+        return "{" + ", ".join(_python_to_c_literal(v) for v in value) + "}"
+    if value is True:
+        return "1"
+    if value is False:
+        return "0"
+    return str(value)
+
+
+def _python_to_java_literal(value: Any) -> str:
+    if isinstance(value, str):
+        escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+        return f'"{escaped}"'
+    if isinstance(value, list):
+        return "new int[]{" + ", ".join(str(v) for v in value) + "}"
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    return str(value)
+
+
+def _normalize_output_text(text: str) -> str:
+    return text.strip().replace(" ", "")
+
+
+def _build_c_runner(solution_code: str, function_name: str, inputs: List[Any]) -> str:
+    if function_name == "two_sum":
+        nums = inputs[0] if len(inputs) > 0 else []
+        target = inputs[1] if len(inputs) > 1 else 0
+        nums_literal = _python_to_c_literal(nums)
+        nums_size = len(nums)
+        return f"""
+#include <stdio.h>
+#include <stdlib.h>
+
+{solution_code}
+
+int main(void) {{
+    int nums[] = {nums_literal};
+    int target = {target};
+    int returnSize = 0;
+    int* out = two_sum(nums, {nums_size}, target, &returnSize);
+    printf("[");
+    for (int i = 0; i < returnSize; i++) {{
+        if (i) printf(",");
+        printf("%d", out[i]);
+    }}
+    printf("]");
+    return 0;
+}}
+"""
+
+    if function_name == "length_of_longest_substring":
+        s = _python_to_c_literal(inputs[0] if inputs else "")
+        return f"""
+#include <stdio.h>
+#include <string.h>
+
+{solution_code}
+
+int main(void) {{
+    char s[] = {s};
+    int out = length_of_longest_substring(s);
+    printf("%d", out);
+    return 0;
+}}
+"""
+
+    # Default to trap-like int[] -> int signature.
+    arr = inputs[0] if inputs else []
+    arr_literal = _python_to_c_literal(arr)
+    arr_size = len(arr)
+    return f"""
+#include <stdio.h>
+
+{solution_code}
+
+int main(void) {{
+    int arr[] = {arr_literal};
+    int out = {function_name}(arr, {arr_size});
+    printf("%d", out);
+    return 0;
+}}
+"""
+
+
+def _build_c_runner_variants(solution_code: str, function_name: str, inputs: List[Any]) -> List[str]:
+    variants = [_build_c_runner(solution_code, function_name, inputs)]
+    if function_name == "two_sum":
+        nums = inputs[0] if len(inputs) > 0 else []
+        target = inputs[1] if len(inputs) > 1 else 0
+        nums_literal = _python_to_c_literal(nums)
+        nums_size = len(nums)
+        variants.append(
+            f"""
+#include <stdio.h>
+#include <stdlib.h>
+
+{solution_code}
+
+int main(void) {{
+    int nums[] = {nums_literal};
+    int target = {target};
+    int* out = two_sum(nums, {nums_size}, target);
+    if (!out) {{
+        printf("[]");
+        return 0;
+    }}
+    printf("[%d,%d]", out[0], out[1]);
+    return 0;
+}}
+"""
+        )
+    return variants
+
+
+def _java_method_is_static(user_code: str, function_name: str) -> bool:
+    pattern = rf"(?:public\s+)?(?:private\s+)?(?:protected\s+)?(static\s+)?[\w\[\]<>]+\s+{re.escape(function_name)}\s*\("
+    match = re.search(pattern, user_code)
+    return bool(match and match.group(1))
+
+
+def _build_java_runner(solution_code: str, function_name: str, inputs: List[Any]) -> Tuple[str, str]:
+    class_name = "Solution"
+    class_match = re.search(r"class\s+([A-Za-z_][A-Za-z0-9_]*)", solution_code)
+    if class_match:
+        class_name = class_match.group(1)
+        user_code = solution_code
+    else:
+        user_code = f"class {class_name} {{\n{solution_code}\n}}"
+
+    is_static = _java_method_is_static(user_code, function_name)
+    call_prefix = f"{class_name}." if is_static else f"new {class_name}()."
+
+    if function_name == "two_sum":
+        nums = _python_to_java_literal(inputs[0] if len(inputs) > 0 else [])
+        target = _python_to_java_literal(inputs[1] if len(inputs) > 1 else 0)
+        runner = f"""
+import java.util.*;
+
+public class Runner {{
+    public static void main(String[] args) {{
+        int[] nums = {nums};
+        int target = {target};
+        int[] out = {call_prefix}two_sum(nums, target);
+        System.out.print(Arrays.toString(out).replace(" ", ""));
+    }}
+}}
+"""
+        return user_code, runner
+
+    if function_name == "length_of_longest_substring":
+        s = _python_to_java_literal(inputs[0] if inputs else "")
+        runner = f"""
+public class Runner {{
+    public static void main(String[] args) {{
+        int out = {call_prefix}length_of_longest_substring({s});
+        System.out.print(out);
+    }}
+}}
+"""
+        return user_code, runner
+
+    arr = _python_to_java_literal(inputs[0] if inputs else [])
+    runner = f"""
+public class Runner {{
+    public static void main(String[] args) {{
+        int[] arr = {arr};
+        int out = {call_prefix}{function_name}(arr);
+        System.out.print(out);
+    }}
+}}
+"""
+    return user_code, runner
+
+
+def _run_test_cases_c(solution_code: str, function_name: str, test_cases: List[Dict[str, Any]], timeout: float) -> Dict[str, Any]:
+    summary = {"total": len(test_cases), "passed": 0, "failed": 0, "results": []}
+    compiler = shutil.which("gcc") or shutil.which("clang")
+    if compiler is None:
+        summary["error"] = "C compiler not found (gcc/clang)."
+        return summary
+
+    for idx, tc in enumerate(test_cases):
+        tc_result = {
+            "test_id": idx + 1,
+            "inputs": tc.get("inputs", []),
+            "expected": tc.get("expected"),
+            "actual": None,
+            "passed": False,
+            "error": None,
+            "runtime_ms": 0.0,
+            "timed_out": False,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            c_path = os.path.join(tmp, "solution.c")
+            exe_path = os.path.join(tmp, "solution.exe")
+
+            compile_proc = None
+            for source in _build_c_runner_variants(solution_code, function_name, tc_result["inputs"]):
+                with open(c_path, "w", encoding="utf-8") as f:
+                    f.write(source)
+
+                compile_proc = subprocess.run(
+                    [compiler, c_path, "-O2", "-o", exe_path],
+                    capture_output=True,
+                    text=True,
+                    timeout=max(timeout, 5),
+                )
+                if compile_proc.returncode == 0:
+                    break
+
+            if compile_proc is None or compile_proc.returncode != 0:
+                tc_result["error"] = (compile_proc.stderr.strip() if compile_proc else "") or "C compile error"
+                summary["failed"] += 1
+                summary["results"].append(tc_result)
+                continue
+
+            start = time.perf_counter()
+            try:
+                run_proc = subprocess.run(
+                    [exe_path],
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                )
+                elapsed_ms = (time.perf_counter() - start) * 1000
+                tc_result["runtime_ms"] = round(elapsed_ms, 3)
+                if run_proc.returncode != 0:
+                    tc_result["error"] = run_proc.stderr.strip() or "Runtime error"
+                else:
+                    actual = run_proc.stdout.strip()
+                    tc_result["actual"] = actual
+                    expected = str(tc_result["expected"])
+                    tc_result["passed"] = _normalize_output_text(actual) == _normalize_output_text(expected)
+            except subprocess.TimeoutExpired:
+                tc_result["timed_out"] = True
+                tc_result["error"] = f"Timed out after {timeout}s"
+
+        if tc_result["passed"]:
+            summary["passed"] += 1
+        else:
+            summary["failed"] += 1
+        summary["results"].append(tc_result)
+
+    return summary
+
+
+def _run_test_cases_java(solution_code: str, function_name: str, test_cases: List[Dict[str, Any]], timeout: float) -> Dict[str, Any]:
+    summary = {"total": len(test_cases), "passed": 0, "failed": 0, "results": []}
+    javac = shutil.which("javac")
+    java = shutil.which("java")
+    if javac is None or java is None:
+        summary["error"] = "Java runtime/compiler not found (javac/java)."
+        return summary
+
+    for idx, tc in enumerate(test_cases):
+        tc_result = {
+            "test_id": idx + 1,
+            "inputs": tc.get("inputs", []),
+            "expected": tc.get("expected"),
+            "actual": None,
+            "passed": False,
+            "error": None,
+            "runtime_ms": 0.0,
+            "timed_out": False,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            user_code, runner_code = _build_java_runner(solution_code, function_name, tc_result["inputs"])
+            class_match = re.search(r"class\s+([A-Za-z_][A-Za-z0-9_]*)", user_code)
+            class_name = class_match.group(1) if class_match else "Solution"
+            user_file = os.path.join(tmp, f"{class_name}.java")
+            runner_file = os.path.join(tmp, "Runner.java")
+
+            with open(user_file, "w", encoding="utf-8") as f:
+                f.write(user_code)
+            with open(runner_file, "w", encoding="utf-8") as f:
+                f.write(runner_code)
+
+            compile_proc = subprocess.run(
+                [javac, user_file, runner_file],
+                capture_output=True,
+                text=True,
+                timeout=max(timeout, 8),
+                cwd=tmp,
+            )
+            if compile_proc.returncode != 0:
+                tc_result["error"] = compile_proc.stderr.strip() or "Java compile error"
+                summary["failed"] += 1
+                summary["results"].append(tc_result)
+                continue
+
+            start = time.perf_counter()
+            try:
+                run_proc = subprocess.run(
+                    [java, "Runner"],
+                    capture_output=True,
+                    text=True,
+                    timeout=timeout,
+                    cwd=tmp,
+                )
+                elapsed_ms = (time.perf_counter() - start) * 1000
+                tc_result["runtime_ms"] = round(elapsed_ms, 3)
+                if run_proc.returncode != 0:
+                    tc_result["error"] = run_proc.stderr.strip() or "Runtime error"
+                else:
+                    actual = run_proc.stdout.strip()
+                    tc_result["actual"] = actual
+                    expected = str(tc_result["expected"])
+                    tc_result["passed"] = _normalize_output_text(actual) == _normalize_output_text(expected)
+            except subprocess.TimeoutExpired:
+                tc_result["timed_out"] = True
+                tc_result["error"] = f"Timed out after {timeout}s"
+
+        if tc_result["passed"]:
+            summary["passed"] += 1
+        else:
+            summary["failed"] += 1
+        summary["results"].append(tc_result)
+
+    return summary
+
+
+def run_test_cases_by_language(
+    solution_code: str,
+    function_name: str,
+    test_cases: List[Dict[str, Any]],
+    language: str = "python",
+    timeout: float = EXECUTION_TIMEOUT_SECONDS,
+) -> Dict[str, Any]:
+    language = (language or "python").lower()
+    if language == "python":
+        return run_test_cases(solution_code, function_name, test_cases, timeout=timeout)
+    if language == "c":
+        return _run_test_cases_c(solution_code, function_name, test_cases, timeout=timeout)
+    if language == "java":
+        return _run_test_cases_java(solution_code, function_name, test_cases, timeout=timeout)
+    return {
+        "total": len(test_cases),
+        "passed": 0,
+        "failed": len(test_cases),
+        "results": [],
+        "error": f"Unsupported language: {language}",
+    }
 
 
 # ---------------------------------------------------------------------------

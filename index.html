@@ -1,1643 +1,864 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeIQ — Intelligent Code Evaluation</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #16161f;
-    --border: #1e1e2e;
-    --border2: #2a2a3e;
-    --text: #e2e2f0;
-    --muted: #6b6b8a;
-    --accent: #7c6af7;
-    --accent2: #5bd4b4;
-    --accent3: #f7a35c;
-    --danger: #f75c7c;
-    --success: #5cf79a;
-    --warn: #f7d35c;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-code: 'JetBrains Mono', monospace;
-  }
-
-  html, body { height: 100%; overflow: hidden; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 14px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* NAV */
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    height: 52px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    flex-shrink: 0;
-    z-index: 100;
-  }
-
-  .logo {
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-  }
-
-  .logo-icon {
-    width: 28px; height: 28px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-
-  .logo span { color: var(--accent); }
-
-  .nav-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    flex: 1;
-  }
-
-  .diff-badge {
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-
-  .diff-badge.easy { background: rgba(92,247,154,0.12); color: var(--success); border-color: rgba(92,247,154,0.2); }
-  .diff-badge.medium { background: rgba(247,211,92,0.12); color: var(--warn); border-color: rgba(247,211,92,0.2); }
-  .diff-badge.hard { background: rgba(247,92,124,0.12); color: var(--danger); border-color: rgba(247,92,124,0.2); }
-  .diff-badge.active { filter: brightness(1.3); transform: scale(1.05); }
-  .diff-badge:hover { filter: brightness(1.2); }
-
-  .nav-right { display: flex; align-items: center; justify-content: flex-end; gap: 12px; flex: 1; }
-
-  .btn-run {
-    padding: 6px 18px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    border-radius: 6px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-run:hover { border-color: var(--muted); }
-
-  .btn-submit {
-    padding: 6px 18px;
-    background: var(--accent);
-    border: none;
-    color: white;
-    border-radius: 6px;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn-submit:hover { background: #6a58e0; transform: translateY(-1px); }
-  .btn-submit:active { transform: translateY(0); }
-  .btn-submit.loading { pointer-events: none; opacity: 0.7; }
-
-  .btn-submit.loading::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: shimmer 1s infinite;
-  }
-
-  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-
-  /* MAIN LAYOUT */
-  .main {
-    display: grid;
-    grid-template-columns: 380px 1fr 380px;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* PROBLEM PANEL */
-  .problem-panel {
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--surface);
-  }
-
-  .panel-tabs {
-    display: flex;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  .tab {
-    padding: 10px 16px;
-    font-size: 13px;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .tab:hover:not(.active) { color: var(--text); }
-
-  .panel-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-  }
-
-  .panel-content::-webkit-scrollbar { width: 4px; }
-  .panel-content::-webkit-scrollbar-track { background: transparent; }
-  .panel-content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-  .problem-title {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    line-height: 1.3;
-  }
-
-  .problem-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .problem-desc {
-    color: #a8a8c0;
-    line-height: 1.7;
-    font-size: 13.5px;
-    margin-bottom: 20px;
-  }
-
-  .problem-desc code {
-    background: var(--surface2);
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: var(--font-code);
-    font-size: 12px;
-    color: var(--accent2);
-  }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .example-block {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
-    font-family: var(--font-code);
-    font-size: 12px;
-  }
-
-  .example-label { color: var(--muted); font-size: 11px; margin-bottom: 6px; }
-  .example-io { color: var(--text); line-height: 1.6; }
-  .example-io .key { color: var(--accent2); }
-
-  .constraints {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-top: 12px;
-  }
-
-  .constraints li {
-    color: #a8a8c0;
-    font-size: 13px;
-    margin-bottom: 4px;
-    margin-left: 16px;
-  }
-
-  /* TEST CASES PANEL */
-  .test-case-item {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
-  .test-case-item:hover { border-color: var(--border2); }
-
-  .tc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .tc-label { font-size: 12px; color: var(--muted); font-family: var(--font-code); }
-  .tc-status { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); }
-  .tc-status.pass { background: var(--success); box-shadow: 0 0 6px var(--success); }
-  .tc-status.fail { background: var(--danger); box-shadow: 0 0 6px var(--danger); }
-  .tc-status.running { background: var(--accent3); animation: pulse 1s infinite; }
-
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity: 0.4; } }
-
-  .tc-row { display: flex; gap: 8px; font-family: var(--font-code); font-size: 12px; color: #a8a8c0; line-height: 1.5; }
-  .tc-key { color: var(--muted); min-width: 60px; }
-
-  /* CODE PANEL */
-  .code-panel {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--bg);
-  }
-
-  .code-toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 16px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    flex-shrink: 0;
-  }
-
-  .lang-select {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-family: var(--font-code);
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .editor-wrap {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-
-  #code-editor {
-    width: 100%;
-    height: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-code);
-    font-size: 13.5px;
-    line-height: 1.6;
-    padding: 16px 16px 16px 50px;
-    border: none;
-    outline: none;
-    resize: none;
-    tab-size: 4;
-    caret-color: var(--accent);
-  }
-
-  .line-numbers {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 42px;
-    padding: 16px 8px 16px 0;
-    font-family: var(--font-code);
-    font-size: 13.5px;
-    line-height: 1.6;
-    color: var(--border2);
-    text-align: right;
-    pointer-events: none;
-    user-select: none;
-    overflow: hidden;
-    white-space: pre-wrap;
-  }
-
-  /* OUTPUT PANEL */
-  .output-panel {
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    background: var(--surface);
-  }
-
-  .output-empty {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: var(--muted);
-    gap: 10px;
-  }
-
-  .output-empty-icon {
-    font-size: 32px;
-    opacity: 0.3;
-  }
-
-  .output-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .output-content::-webkit-scrollbar { width: 4px; }
-  .output-content::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
-
-  /* OUTPUT CARDS */
-  .result-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    flex-shrink: 0;
-    animation: slideIn 0.3s ease;
-  }
-
-  @keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-  }
-
-  .card-title {
-    font-size: 12px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .card-dot { width: 7px; height: 7px; border-radius: 50%; }
-  .dot-success { background: var(--success); }
-  .dot-fail { background: var(--danger); }
-  .dot-warn { background: var(--warn); }
-  .dot-info { background: var(--accent); }
-  .dot-accent2 { background: var(--accent2); }
-
-  .card-body { padding: 12px 14px; }
-
-  .score-display {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .score-num {
-    font-family: var(--font-display);
-    font-size: 36px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .score-bar-wrap {
-    background: var(--border);
-    border-radius: 4px;
-    height: 6px;
-    margin-bottom: 14px;
-    overflow: hidden;
-  }
-
-  .score-bar {
-    height: 100%;
-    border-radius: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 0%;
-  }
-
-  .score-breakdown {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-  }
-
-  .breakdown-item {
-    background: var(--surface2);
-    border-radius: 7px;
-    padding: 8px;
-    text-align: center;
-  }
-
-  .breakdown-val {
-    font-family: var(--font-code);
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .breakdown-label {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .tc-results-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-
-  .tc-result-item {
-    background: var(--surface2);
-    border-radius: 6px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    font-family: var(--font-code);
-    font-size: 11.5px;
-  }
-
-  .tc-r-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-
-  .approach-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    background: rgba(124, 106, 247, 0.12);
-    border: 1px solid rgba(124, 106, 247, 0.25);
-    color: #a89cf7;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .complexity-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
-
-  .complexity-badge {
-    flex: 1;
-    background: var(--surface2);
-    border-radius: 7px;
-    padding: 8px;
-    text-align: center;
-  }
-
-  .complexity-val {
-    font-family: var(--font-code);
-    font-size: 14px;
-    color: var(--accent3);
-    font-weight: 500;
-  }
-
-  .complexity-label {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  .error-block {
-    background: rgba(247, 92, 124, 0.07);
-    border: 1px solid rgba(247, 92, 124, 0.2);
-    border-radius: 7px;
-    padding: 10px 12px;
-    font-family: var(--font-code);
-    font-size: 12px;
-    color: #f79ab0;
-    line-height: 1.6;
-    white-space: pre-wrap;
-  }
-
-  .suggest-block {
-    background: rgba(91, 212, 180, 0.07);
-    border: 1px solid rgba(91, 212, 180, 0.2);
-    border-radius: 7px;
-    padding: 12px;
-    font-size: 13px;
-    color: #8ee8d0;
-    line-height: 1.7;
-  }
-
-  .opt-code-block {
-    background: var(--bg);
-    border: 1px solid var(--border2);
-    border-radius: 7px;
-    padding: 12px;
-    font-family: var(--font-code);
-    font-size: 12px;
-    color: #c9c9e0;
-    line-height: 1.7;
-    white-space: pre-wrap;
-    overflow-x: auto;
-    margin-top: 8px;
-  }
-
-  .reward-timeline {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-
-  .reward-chip {
-    padding: 3px 9px;
-    border-radius: 4px;
-    font-family: var(--font-code);
-    font-size: 11px;
-  }
-
-  .reward-pos { background: rgba(92,247,154,0.1); color: var(--success); }
-  .reward-neg { background: rgba(247,92,124,0.1); color: var(--danger); }
-
-  /* RESIZER */
-  .resizer {
-    width: 4px;
-    background: var(--border);
-    cursor: col-resize;
-    transition: background 0.2s;
-  }
-  .resizer:hover { background: var(--accent); }
-
-  /* LOADING OVERLAY */
-  .loading-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(10,10,15,0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .loading-overlay.show { opacity: 1; pointer-events: all; }
-
-  .loading-card {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 14px;
-    padding: 32px 40px;
-    text-align: center;
-    min-width: 280px;
-  }
-
-  .loading-spinner {
-    width: 44px; height: 44px;
-    border: 3px solid var(--border2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .loading-steps {
-    margin-top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .loading-step {
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    text-align: left;
-    transition: color 0.3s;
-  }
-
-  .loading-step.active { color: var(--accent2); }
-  .loading-step.done { color: var(--success); }
-
-  .step-icon { font-size: 11px; min-width: 14px; }
-
-  /* TOOLTIP */
-  .tooltip {
-    position: relative;
-  }
-  .tooltip::after {
-    content: attr(data-tip);
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    padding: 4px 8px;
-    border-radius: 5px;
-    font-size: 11px;
-    white-space: nowrap;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .tooltip:hover::after { opacity: 1; }
-
-  /* STATUS BAR */
-  .status-bar {
-    height: 22px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    padding: 0 16px;
-    gap: 16px;
-    font-size: 11px;
-    color: var(--muted);
-    flex-shrink: 0;
-  }
-
-  .status-item { display: flex; align-items: center; gap: 4px; }
-  .status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); }
-
-  @media (max-width: 1100px) {
-    .main { grid-template-columns: 320px 1fr 320px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Intelligence Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #131c31;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --blue: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --purple: #a855f7;
+      --shadow: 0 14px 38px rgba(2, 6, 23, 0.35);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 10% -10%, #1f2a46 0, var(--bg) 42%), var(--bg);
+      color: var(--text);
+      font-family: Manrope, sans-serif;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 20px 24px 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0 18px;
+    }
+
+    .brand { font-weight: 700; font-size: 20px; letter-spacing: 0.2px; }
+    .brand .accent { color: var(--blue); }
+
+    .nav {
+      display: inline-flex;
+      gap: 8px;
+      background: rgba(24, 35, 61, 0.55);
+      border-radius: 14px;
+      padding: 6px;
+    }
+
+    .nav button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 220ms ease;
+      font-weight: 600;
+    }
+    .nav button.active,
+    .nav button:hover { background: rgba(59, 130, 246, 0.16); color: var(--text); }
+
+    .page { display: none; animation: fade 240ms ease; }
+    .page.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
+
+    .card {
+      background: linear-gradient(180deg, rgba(19, 28, 49, 0.96), rgba(19, 28, 49, 0.82));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .dashboard-head { font-size: 30px; font-weight: 700; margin: 8px 0 18px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat { padding: 18px; }
+    .stat .label { color: var(--muted); font-size: 13px; }
+    .stat .value { font-size: 28px; font-weight: 700; margin-top: 8px; }
+
+    .primary {
+      border: 0;
+      background: var(--blue);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 180ms ease;
+    }
+    .primary:hover { filter: brightness(1.08); }
+
+    .search-wrap {
+      margin: 8px 0 14px;
+      padding: 14px 16px;
+    }
+
+    .problems-layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 12px;
+      min-height: calc(100vh - 210px);
+    }
+
+    .problems-left, .problems-right {
+      padding: 14px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .search {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .problem-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+      max-height: calc(100vh - 280px);
+      overflow: auto;
+    }
+
+    .problem-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+    .problem-list li:hover { background: rgba(148, 163, 184, 0.1); }
+    .problem-list li.active { background: rgba(59, 130, 246, 0.18); }
+
+    .p-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .p-title {
+      font-weight: 700;
+      letter-spacing: 0.15px;
+    }
+
+    .p-desc {
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .p-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .p-tag {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.14);
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .p-tests {
+      color: #93c5fd;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      background: rgba(59, 130, 246, 0.12);
+      padding: 8px 10px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+
+    .problem-detail-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 4px 0 8px;
+    }
+
+    .problem-detail-desc {
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .detail-section {
+      background: rgba(11, 18, 35, 0.55);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .detail-label {
+      color: #93c5fd;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .detail-value {
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .open-workspace-btn {
+      border: 0;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      padding: 10px 14px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .diff { font-size: 12px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+    .diff.easy { color: var(--green); background: rgba(34, 197, 94, 0.14); }
+    .diff.medium { color: #f59e0b; background: rgba(245, 158, 11, 0.14); }
+    .diff.hard { color: var(--red); background: rgba(239, 68, 68, 0.14); }
+
+    .workspace {
+      display: grid;
+      grid-template-rows: minmax(420px, 56vh) minmax(220px, auto);
+      gap: 14px;
+      padding-bottom: 82px;
+      position: relative;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      min-height: 0;
+    }
+
+    .problem-pane, .editor-pane, .panel {
+      padding: 16px;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .problem-pane h2 { margin: 0 0 8px; font-size: 24px; }
+    .problem-pane p { color: #cbd5e1; line-height: 1.65; }
+    .problem-meta { margin: 10px 0 0; display: flex; gap: 8px; align-items: center; }
+
+    .ws-sections { margin-top: 14px; display: grid; gap: 12px; }
+    .ws-section { background: rgba(11, 18, 35, 0.55); border-radius: 10px; padding: 10px 12px; }
+    .ws-label { color: #93c5fd; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; font-weight: 700; }
+    .ws-value { color: #cbd5e1; font-size: 13px; line-height: 1.55; }
+    .ws-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ws-chip { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; border-radius: 999px; padding: 4px 10px; font-size: 11px; font-weight: 700; }
+    .ws-example { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #bfdbfe; background: rgba(59, 130, 246, 0.12); padding: 8px; border-radius: 8px; white-space: pre-wrap; margin-top: 6px; }
+
+    .editor-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .editor-title { color: var(--muted); font-size: 13px; }
+    .editor {
+      width: 100%;
+      min-height: calc(100% - 36px);
+      border: 0;
+      outline: 0;
+      resize: none;
+      background: #0b1223;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 16px;
+      font: 500 14px/1.6 "IBM Plex Mono", monospace;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.14);
+    }
+
+    .segmented {
+      position: relative;
+      display: inline-flex;
+      background: #0b1223;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 12px;
+      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+    }
+    .segmented .slider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc((100% - 8px) / 3);
+      height: calc(100% - 8px);
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      transition: transform 220ms ease;
+    }
+    .segmented button {
+      position: relative;
+      z-index: 1;
+      min-width: 120px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .segmented button.active { color: var(--text); }
+
+    .panel-view { display: none; }
+    .panel-view.active { display: block; }
+    .eff { margin-top: 12px; color: #cbd5e1; font-size: 13px; }
+    .eff .value { color: var(--blue); font-weight: 700; }
+
+    .case {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.09);
+      color: #fecaca;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      min-height: 18px;
+      transition: color 180ms ease;
+    }
+
+    .action-bar {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      display: inline-flex;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.84);
+      border-radius: 999px;
+      padding: 10px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .action-bar button {
+      border: 0;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.16);
+      transition: 160ms ease;
+    }
+    .action-bar .run { background: var(--blue); }
+    .action-bar .analyze { background: rgba(34, 197, 94, 0.22); color: #bbf7d0; }
+    .action-bar .optimize { background: rgba(168, 85, 247, 0.24); color: #e9d5ff; }
+    .action-bar button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+    .profile-box { padding: 18px; margin-top: 10px; }
+    .profile-line { margin-bottom: 12px; color: #e2e8f0; }
+    .profile-label { color: var(--muted); margin-right: 8px; }
+
+    @media (max-width: 1024px) {
+      .split { grid-template-columns: 1fr; }
+      .workspace { grid-template-rows: auto auto; }
+      .problems-layout { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-
-<!-- NAV -->
-<nav>
-  <div class="logo">
-    <div class="logo-icon">⚡</div>
-    Code<span>IQ</span>
-  </div>
-
-  <div class="nav-center">
-    <div class="diff-badge easy active" onclick="loadProblem('easy', this)">Easy</div>
-    <div class="diff-badge medium" onclick="loadProblem('medium', this)">Medium</div>
-    <div class="diff-badge hard" onclick="loadProblem('hard', this)">Hard</div>
-  </div>
-
-  <div class="nav-right">
-    <button class="btn-run" onclick="runTests()">▶ Run</button>
-    <button class="btn-submit" id="submitBtn" onclick="submitCode()">Submit →</button>
-  </div>
-</nav>
-
-<!-- MAIN -->
-<div class="main">
-
-  <!-- PROBLEM PANEL -->
-  <div class="problem-panel">
-    <div class="panel-tabs">
-      <div class="tab active" onclick="showTab(this,'problem-tab')">Description</div>
-      <div class="tab" onclick="showTab(this,'testcases-tab')">Test Cases</div>
-      <div class="tab" onclick="showTab(this,'hints-tab')">Hints</div>
-    </div>
-
-    <!-- PROBLEM TAB -->
-    <div class="panel-content" id="problem-tab">
-      <!-- Filled dynamically -->
-    </div>
-
-    <!-- TEST CASES TAB -->
-    <div class="panel-content" id="testcases-tab" style="display:none">
-      <div class="section-label" style="margin-bottom:14px">Test Cases</div>
-      <div id="tc-list"></div>
-    </div>
-
-    <!-- HINTS TAB -->
-    <div class="panel-content" id="hints-tab" style="display:none">
-      <div class="section-label" style="margin-bottom:14px">Approach Hints</div>
-      <div id="hints-content"></div>
-    </div>
-  </div>
-
-  <!-- CODE PANEL -->
-  <div class="code-panel">
-    <div class="code-toolbar">
-      <select class="lang-select" id="langSelect">
-        <option>Python</option>
-        <option>JavaScript</option>
-        <option>Java</option>
-        <option>C++</option>
-        <option>C#</option>
-        <option>Go</option>
-        <option>Rust</option>
-        <option>Ruby</option>
-        <option>PHP</option>
-      </select>
-      <div style="display:flex; gap:8px; align-items:center">
-        <span id="line-col" style="font-size:11px; color:var(--muted); font-family:var(--font-code)">Ln 1, Col 1</span>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">Code <span class="accent">Intelligence</span> Lab</div>
+      <div class="nav">
+        <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+        <button class="nav-btn" data-page="problems">Problems</button>
+        <button class="nav-btn" data-page="workspace">Workspace</button>
+        <button class="nav-btn" data-page="profile">Profile</button>
       </div>
     </div>
-    <div class="editor-wrap">
-      <div class="line-numbers" id="lineNums">1</div>
-      <textarea id="code-editor" spellcheck="false" autocomplete="off" autocorrect="off"></textarea>
-    </div>
-  </div>
 
-  <!-- OUTPUT PANEL -->
-  <div class="output-panel">
-    <div class="panel-tabs">
-      <div class="tab active">Analysis Output</div>
-    </div>
-
-    <div id="output-empty" class="output-empty">
-      <div class="output-empty-icon">◎</div>
-      <div style="font-size:13px">Submit your code to see AI analysis</div>
-      <div style="font-size:11px; color:var(--muted)">Test results · Bug detection · Optimization</div>
-    </div>
-
-    <div id="output-content" class="output-content" style="display:none">
-      <!-- Filled dynamically -->
-    </div>
-  </div>
-</div>
-
-<!-- STATUS BAR -->
-<div class="status-bar">
-  <div class="status-item"><div class="status-dot"></div> API Ready</div>
-  <div class="status-item" id="status-task">Task: Easy — Two Sum</div>
-  <div class="status-item" id="status-state">State: Idle</div>
-</div>
-
-<!-- LOADING OVERLAY -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-card">
-    <div class="loading-spinner"></div>
-    <div style="font-family:var(--font-display); font-size:16px; font-weight:700; margin-bottom:4px">Analyzing Code</div>
-    <div style="font-size:12px; color:var(--muted)">RL Agent processing...</div>
-    <div class="loading-steps">
-      <div class="loading-step" id="ls1"><span class="step-icon">○</span> Running test cases</div>
-      <div class="loading-step" id="ls2"><span class="step-icon">○</span> Detecting bugs</div>
-      <div class="loading-step" id="ls3"><span class="step-icon">○</span> Classifying approach</div>
-      <div class="loading-step" id="ls4"><span class="step-icon">○</span> Analyzing complexity</div>
-      <div class="loading-step" id="ls5"><span class="step-icon">○</span> Generating optimization</div>
-      <div class="loading-step" id="ls6"><span class="step-icon">○</span> Computing score</div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ============================================================
-// PROBLEM DATABASE
-// ============================================================
-const PROBLEMS = {
-  easy: {
-    id: 1, title: "Two Sum", difficulty: "easy",
-    dataStructure: "Array + HashMap",
-    questionSet: [
-      { title: "Two Sum", dataStructure: "Array + HashMap" },
-      { title: "Valid Parentheses", dataStructure: "Stack" },
-      { title: "Merge Two Sorted Lists", dataStructure: "Linked List" },
-      { title: "Maximum Depth of Binary Tree", dataStructure: "Tree (DFS/BFS)" }
-    ],
-    description: `Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers</em> such that they add up to <code>target</code>.<br><br>You may assume that each input would have <strong>exactly one solution</strong>, and you may not use the same element twice.<br><br>You can return the answer in any order.`,
-    examples: [
-      { input: "nums = [2,7,11,15], target = 9", output: "[0, 1]", explain: "nums[0] + nums[1] = 2 + 7 = 9" },
-      { input: "nums = [3,2,4], target = 6", output: "[1, 2]", explain: "nums[1] + nums[2] = 2 + 4 = 6" }
-    ],
-    constraints: ["2 ≤ nums.length ≤ 10⁴", "-10⁹ ≤ nums[i] ≤ 10⁹", "Only one valid answer exists"],
-    testCases: [
-      { input: "[2,7,11,15], 9", expected: "[0, 1]" },
-      { input: "[3,2,4], 6", expected: "[1, 2]" },
-      { input: "[3,3], 6", expected: "[0, 1]" },
-      { input: "[1,2,3,4], 7", expected: "[2, 3]" }
-    ],
-    defaultCode: `def two_sum(nums, target):
-    # Write your solution here
-    pass`,
-    hints: ["Consider using a hashmap to store visited values", "For each element, check if its complement exists", "O(n) solution is possible with a single pass"],
-    expectedApproach: "hashmap",
-    expectedComplexity: { time: "O(n)", space: "O(n)" }
-  },
-
-  medium: {
-    id: 2, title: "Longest Substring Without Repeating Characters", difficulty: "medium",
-    dataStructure: "HashMap + Sliding Window",
-    questionSet: [
-      { title: "Longest Substring Without Repeating Characters", dataStructure: "HashMap + Sliding Window" },
-      { title: "Group Anagrams", dataStructure: "HashMap" },
-      { title: "3Sum", dataStructure: "Array + Two Pointers" },
-      { title: "Binary Tree Level Order Traversal", dataStructure: "Tree + Queue" }
-    ],
-    description: `Given a string <code>s</code>, find the length of the <strong>longest substring</strong> without repeating characters.<br><br>A substring is a contiguous non-empty sequence of characters within a string.`,
-    examples: [
-      { input: 's = "abcabcbb"', output: "3", explain: 'The answer is "abc", with length 3' },
-      { input: 's = "bbbbb"', output: "1", explain: 'The answer is "b", with length 1' },
-      { input: 's = "pwwkew"', output: "3", explain: 'The answer is "wke", with length 3' }
-    ],
-    constraints: ["0 ≤ s.length ≤ 5 × 10⁴", "s consists of English letters, digits, symbols and spaces"],
-    testCases: [
-      { input: '"abcabcbb"', expected: "3" },
-      { input: '"bbbbb"', expected: "1" },
-      { input: '"pwwkew"', expected: "3" },
-      { input: '""', expected: "0" }
-    ],
-    defaultCode: `def length_of_longest_substring(s):
-    # Write your solution here
-    pass`,
-    hints: ["Try sliding window with two pointers", "Maintain a set of characters in current window", "Move left pointer when duplicate found"],
-    expectedApproach: "two pointers / sliding window",
-    expectedComplexity: { time: "O(n)", space: "O(k)" }
-  },
-
-  hard: {
-    id: 3, title: "Trapping Rain Water", difficulty: "hard",
-    dataStructure: "Array + Two Pointers",
-    questionSet: [
-      { title: "Trapping Rain Water", dataStructure: "Array + Two Pointers" },
-      { title: "Median of Two Sorted Arrays", dataStructure: "Array + Binary Search" },
-      { title: "Merge k Sorted Lists", dataStructure: "Heap + Linked List" },
-      { title: "Word Ladder", dataStructure: "Graph + BFS" }
-    ],
-    description: `Given <code>n</code> non-negative integers representing an elevation map where the width of each bar is <code>1</code>, compute how much water it can trap after raining.<br><br>This is a classic dynamic programming / two-pointer problem.`,
-    examples: [
-      { input: "height = [0,1,0,2,1,0,1,3,2,1,2,1]", output: "6", explain: "The above elevation map traps 6 units of rain water" },
-      { input: "height = [4,2,0,3,2,5]", output: "9", explain: "9 units of rain water are trapped" }
-    ],
-    constraints: ["n == height.length", "1 ≤ n ≤ 2 × 10⁴", "0 ≤ height[i] ≤ 10⁵"],
-    testCases: [
-      { input: "[0,1,0,2,1,0,1,3,2,1,2,1]", expected: "6" },
-      { input: "[4,2,0,3,2,5]", expected: "9" },
-      { input: "[1,0,1]", expected: "1" },
-      { input: "[3,0,2,0,4]", expected: "7" }
-    ],
-    defaultCode: `def trap(height):
-    # Write your solution here
-    pass`,
-    hints: ["Two-pointer approach reduces to O(n) time O(1) space", "Track left_max and right_max as you go", "Process from the side with smaller max height"],
-    expectedApproach: "two pointers",
-    expectedComplexity: { time: "O(n)", space: "O(1)" }
-  }
-};
-
-// ============================================================
-// STATE
-// ============================================================
-let currentDifficulty = 'easy';
-let currentProblem = PROBLEMS.easy;
-let tcStatuses = [];
-let attemptCount = 0;         // Resets when problem changes
-let dynamicTestCases = [];    // LLM-generated test cases
-let lastRunResult = null;     // Last backend result (for on-demand explanation)
-
-async function callSubmitAPI(wantFullExplanation = false) {
-  const code = document.getElementById('code-editor').value;
-  const res = await fetch('/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      code,
-      attempt_number: attemptCount,
-      want_full_explanation: wantFullExplanation
-    })
-  });
-
-  if (!res.ok) {
-    let message = `Request failed (${res.status})`;
-    try {
-      const err = await res.json();
-      message = err.detail || message;
-    } catch (_) {}
-    throw new Error(message);
-  }
-
-  return await res.json();
-}
-
-// Fetch LLM-generated test cases and apply to the current problem
-async function fetchAndApplyTestCases(difficulty) {
-  try {
-    const res = await fetch(`/generate_test_cases?difficulty=${difficulty}`);
-    if (!res.ok) return;
-    const data = await res.json();
-    if (data.test_cases && data.test_cases.length > 0) {
-      dynamicTestCases = data.test_cases;
-      // Update the problem's testCases display in the UI
-      currentProblem.testCases = data.test_cases.map((tc, i) => ({
-        input: tc.input,
-        expected: tc.expected
-      }));
-      renderTestCases();
-    }
-  } catch (e) {
-    console.warn('Could not load LLM test cases, using defaults:', e.message);
-  }
-}
-function mapPipelineToUi(result) {
-  if (!result) return null;
-  const summary = result.execution_summary || { passed: 0, total: 0 };
-  const passed = summary.passed || 0;
-  const total = summary.total || 0;
-  const cases = (result.test_results && result.test_results.results)
-    ? result.test_results.results.map(r => !!r.passed)
-    : (result.test_cases ? result.test_cases.map(tc => !!tc.passed) : []);
-
-  const bugs = result.original_bugs || { total_issues: 0 };
-  const approach = result.analysis || { approach: 'unknown' };
-  const complexity = result.analysis || { time_complexity: 'Unknown', space_complexity: 'Unknown' };
-  const bestOpt = (result.optimization && result.optimization.best) ? result.optimization.best : null;
-
-  const bugMsg = bugs.syntax_errors && bugs.syntax_errors.length > 0 ? bugs.syntax_errors[0].message : null;
-  const logicMsg = bugs.logical_errors && bugs.logical_errors.length > 0 ? bugs.logical_errors[0].message : null;
-  const runtimeMsg = bugs.runtime_errors && bugs.runtime_errors.length > 0 ? bugs.runtime_errors[0].message : null;
-  const edgeMsg = bugs.edge_case_risks && bugs.edge_case_risks.length > 0 ? bugs.edge_case_risks[0].message : null;
-
-  const errorType = bugMsg ? 'syntax_error' : runtimeMsg ? 'runtime_crash' : logicMsg ? 'logical_error' : edgeMsg ? 'edge_case_risk' : 'none';
-  const bugMessage = bugMsg || runtimeMsg || logicMsg || edgeMsg || 'No critical bug detected';
-  const detailMessage = result.bug_explanation ? 'AI Tutor breakdown available below.' : (summary && summary.error) ? summary.error : 'Submission analyzed successfully.';
-
-  const bugScore = Math.max(0, 1 - ((bugs.total_issues || 0) * 0.2));
-  const explanationScore = Math.max(0.3, Number(approach.confidence || 0));
-  const optimizationScore = bestOpt ? Math.max(0.5, Number(bestOpt.confidence || 0.5)) : 0.25;
-  const totalScore = result.final_score !== undefined ? result.final_score : (bugScore + explanationScore + optimizationScore) / 3;
-
-  const rewardTrace = [];
-  rewardTrace.push(result.syntax_valid ? '+1 syntax valid' : '-1 syntax invalid');
-  rewardTrace.push(total > 0 && passed === total ? '+2 tests passed' : '-1 tests incomplete');
-  rewardTrace.push(bestOpt ? '+2 optimization found' : '-1 no optimization');
-
-  return {
-    test_results: { passed, total, cases },
-    error_type: errorType,
-    bug_explanation: result.bug_explanation,
-    failure_explanation: result.failure_explanation,
-    attempt_number: result.attempt_number || 1,
-    hints_exhausted: result.hints_exhausted || false,
-    analysis: {
-      approach: (approach.primary || 'unknown').replace(/_/g, ' '),
-      time_complexity: complexity.time_complexity || 'Unknown',
-      space_complexity: complexity.space_complexity || 'Unknown',
-      bug: bugMessage,
-      error_detail: detailMessage
-    },
-    optimization: {
-      approach: bestOpt ? bestOpt.approach : 'No optimization candidate',
-      explanation: bestOpt ? (bestOpt.explanation || result.optimization.improvement || '') : (result.optimization && result.optimization.improvement) || 'No optimization suggested.',
-      code: bestOpt ? (bestOpt.optimized_code || result.fixed_code || result.original_code) : (result.fixed_code || result.original_code)
-    },
-    reward_trace: rewardTrace,
-    score: {
-      total: totalScore,
-      bug: bugScore,
-      explanation: explanationScore,
-      optimization: optimizationScore
-    }
-  };
-}
-
-// ============================================================
-// INIT
-// ============================================================
-function init() {
-  loadProblem('easy', document.querySelector('.diff-badge.easy'));
-  setupEditor();
-}
-
-function loadProblem(diff, el) {
-  document.querySelectorAll('.diff-badge').forEach(b => b.classList.remove('active'));
-  if (el) el.classList.add('active');
-
-  currentDifficulty = diff;
-  currentProblem = PROBLEMS[diff];
-  tcStatuses = currentProblem.testCases.map(() => 'pending');
-
-  // Reset attempt counter for this problem
-  attemptCount = 0;
-  lastRunResult = null;
-
-  renderProblem();
-  renderTestCases();
-  renderHints();
-  setEditorCode(currentProblem.defaultCode);
-  clearOutput();
-
-  document.getElementById('status-task').textContent =
-    `Task: ${diff.charAt(0).toUpperCase()+diff.slice(1)} — ${currentProblem.title}`;
-  document.getElementById('status-state').textContent = 'State: Idle';
-
-  // Fetch LLM-generated test cases in background
-  fetchAndApplyTestCases(diff);
-}
-
-// ============================================================
-// RENDER PROBLEM
-// ============================================================
-function renderProblem() {
-  const p = currentProblem;
-  const diffColors = { easy: 'var(--success)', medium: 'var(--warn)', hard: 'var(--danger)' };
-  const col = diffColors[p.difficulty];
-
-  let html = `
-    <div class="problem-title">${p.id}. ${p.title}</div>
-    <div class="problem-meta">
-      <span style="color:${col}; font-size:12px; font-weight:600">${p.difficulty.toUpperCase()}</span>
-      <span style="background:rgba(91,212,180,0.12); border:1px solid rgba(91,212,180,0.25); color:var(--accent2); border-radius:14px; padding:2px 8px; font-size:11px">${p.dataStructure}</span>
-    </div>
-    <div class="problem-desc">${p.description}</div>
-
-    <div class="section-label">Examples</div>`;
-
-  p.examples.forEach((ex, i) => {
-    html += `<div class="example-block">
-      <div class="example-label">Example ${i+1}</div>
-      <div class="example-io"><span class="key">Input:</span> ${ex.input}</div>
-      <div class="example-io"><span class="key">Output:</span> ${ex.output}</div>
-      <div class="example-io" style="color:var(--muted); font-size:11px; margin-top:4px">${ex.explain}</div>
-    </div>`;
-  });
-
-  html += `<div class="section-label" style="margin-top:14px">Constraints</div>
-    <div class="constraints"><ul>`;
-  p.constraints.forEach(c => { html += `<li>${c}</li>`; });
-  html += `</ul></div>`;
-
-  html += `<div class="section-label" style="margin-top:14px">${p.difficulty.toUpperCase()} Question Set</div>`;
-  (p.questionSet || []).forEach((q, idx) => {
-    html += `<div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:8px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-        <div style="font-size:13px; color:var(--text);">${idx + 1}. ${q.title}</div>
-        <span style="background:rgba(124,106,247,0.12); border:1px solid rgba(124,106,247,0.25); color:#a89cf7; border-radius:14px; padding:2px 8px; font-size:10px; white-space:nowrap;">${q.dataStructure}</span>
+    <section class="page active" id="dashboard-page">
+      <div class="dashboard-head">Welcome back</div>
+      <div class="stats">
+        <div class="card stat"><div class="label">Problems solved</div><div class="value" id="stat-solved">0</div></div>
+        <div class="card stat"><div class="label">Average score</div><div class="value" id="stat-avg">0%</div></div>
+        <div class="card stat"><div class="label">Current streak</div><div class="value" id="stat-streak">0</div></div>
       </div>
-    </div>`;
-  });
+      <button class="primary" id="continue-btn">Continue Solving</button>
+    </section>
 
-  document.getElementById('problem-tab').innerHTML = html;
-}
-
-function renderTestCases() {
-  const tcs = currentProblem.testCases;
-  let html = '';
-  tcs.forEach((tc, i) => {
-    html += `<div class="test-case-item" id="tc-item-${i}">
-      <div class="tc-header">
-        <span class="tc-label">Case ${i+1}</span>
-        <div class="tc-status" id="tc-status-${i}"></div>
+    <section class="page" id="problems-page">
+      <div class="card search-wrap">
+        <input class="search" id="search" placeholder="Search problems by title or tag" />
       </div>
-      <div class="tc-row"><span class="tc-key">Input:</span> <span>${tc.input}</span></div>
-      <div class="tc-row"><span class="tc-key">Expected:</span> <span>${tc.expected}</span></div>
-      <div class="tc-row" id="tc-actual-${i}" style="display:none"><span class="tc-key">Actual:</span> <span></span></div>
-    </div>`;
-  });
-  document.getElementById('tc-list').innerHTML = html;
-}
+      <div class="problems-layout">
+        <div class="card problems-left">
+          <ul class="problem-list" id="problem-list"></ul>
+        </div>
+        <div class="card problems-right" id="problem-detail-panel">
+          <div class="problem-detail-title" id="pd-title">Select a problem</div>
+          <div class="problem-meta">
+            <span class="diff easy" id="pd-diff">easy</span>
+            <span id="pd-id" style="color:#94a3b8;font-size:12px;"></span>
+          </div>
+          <div class="problem-detail-desc" id="pd-desc">Choose any problem from the left list to view full details.</div>
 
-function renderHints() {
-  const p = currentProblem;
-  let html = '';
-  p.hints.forEach((h, i) => {
-    html += `<div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:8px; font-size:13px; color:#a8a8c0; line-height:1.6">
-      <span style="color:var(--accent); font-size:11px; font-weight:600; margin-right:6px">HINT ${i+1}</span>${h}
-    </div>`;
-  });
-  html += `<div style="margin-top:14px; padding:12px; background:rgba(124,106,247,0.06); border:1px solid rgba(124,106,247,0.15); border-radius:8px">
-    <div style="font-size:11px; color:var(--muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.8px">Expected Approach</div>
-    <div style="color:var(--accent); font-size:13px">${p.expectedApproach}</div>
-    <div style="margin-top:8px; display:flex; gap:8px">
-      <span style="background:var(--surface2); padding:4px 10px; border-radius:5px; font-family:var(--font-code); font-size:11px; color:var(--accent3)">⏱ ${p.expectedComplexity.time}</span>
-      <span style="background:var(--surface2); padding:4px 10px; border-radius:5px; font-family:var(--font-code); font-size:11px; color:var(--accent2)">💾 ${p.expectedComplexity.space}</span>
-    </div>
-  </div>`;
-  document.getElementById('hints-content').innerHTML = html;
-}
+          <div class="detail-section">
+            <div class="detail-label">Constraints</div>
+            <div class="detail-value" id="pd-constraints">N/A</div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Expected Approach</div>
+            <div class="detail-value" id="pd-approach">N/A</div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-label">Examples</div>
+            <div class="detail-value" id="pd-examples">No examples yet.</div>
+          </div>
 
-// ============================================================
-// EDITOR
-// ============================================================
-function setupEditor() {
-  const ed = document.getElementById('code-editor');
-  ed.addEventListener('keydown', e => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const start = ed.selectionStart;
-      ed.value = ed.value.slice(0,start) + '    ' + ed.value.slice(ed.selectionEnd);
-      ed.selectionStart = ed.selectionEnd = start + 4;
+          <button class="open-workspace-btn" id="open-workspace-btn">Open Workspace</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="workspace-page">
+      <div class="workspace">
+        <div class="split">
+          <div class="card problem-pane">
+            <h2 id="ws-title">Select a problem</h2>
+            <div class="problem-meta">
+              <span class="diff easy" id="ws-diff">easy</span>
+              <span id="ws-id" style="color:#94a3b8;font-size:12px;"></span>
+            </div>
+            <p id="ws-desc">Pick a problem from the Problems page to begin.</p>
+            <div class="ws-sections">
+              <div class="ws-section">
+                <div class="ws-label">Constraints</div>
+                <div class="ws-value" id="ws-constraints">N/A</div>
+              </div>
+              <div class="ws-section">
+                <div class="ws-label">Expected Approach</div>
+                <div class="ws-chip-row" id="ws-approach-row"><span class="ws-chip">N/A</span></div>
+              </div>
+              <div class="ws-section">
+                <div class="ws-label">Expected Complexity</div>
+                <div class="ws-chip-row" id="ws-complexity-row"><span class="ws-chip">Time: N/A</span><span class="ws-chip">Space: N/A</span></div>
+              </div>
+              <div class="ws-section">
+                <div class="ws-label">Examples</div>
+                <div id="ws-examples" class="ws-value">Examples will appear here.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card editor-pane">
+            <div class="editor-head">
+              <div class="editor-title">Code editor (Python only for this dataset)</div>
+            </div>
+            <textarea id="editor" class="editor" spellcheck="false" placeholder="Type your solution here...&#10;&#10;Example:&#10;def solve(input_data):&#10;    # implement logic&#10;    return ..."></textarea>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="segmented" id="segments">
+            <div class="slider" id="segment-slider"></div>
+            <button class="segment active" data-view="results">Results</button>
+            <button class="segment" data-view="analysis">Analysis</button>
+            <button class="segment" data-view="optimization">Optimization</button>
+          </div>
+
+          <div class="panel-view active" id="view-results">
+            <div id="results-summary">Run your code to see test results.</div>
+            <div id="failed-cases"></div>
+          </div>
+
+          <div class="panel-view" id="view-analysis">
+            <div id="analysis-text">Click Analyze to detect approach and complexity.</div>
+            <div class="eff">Efficiency: <span class="value" id="eff-value">N/A</span></div>
+          </div>
+
+          <div class="panel-view" id="view-optimization">
+            <div id="optimization-text">Click Optimize for improvement suggestions.</div>
+            <pre id="optimized-code" style="display:none;margin-top:10px;padding:12px;background:#0b1223;border-radius:10px;color:#e9d5ff;font:12px/1.5 'IBM Plex Mono',monospace;white-space:pre-wrap;"></pre>
+          </div>
+
+          <div class="status" id="status"></div>
+        </div>
+
+        <div class="action-bar">
+          <button class="run" id="run-btn">Run</button>
+          <button class="analyze" id="analyze-btn">Analyze</button>
+          <button class="optimize" id="optimize-btn">Optimize</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="profile-page">
+      <div class="card profile-box">
+        <div class="profile-line"><span class="profile-label">Problems solved:</span><span id="profile-solved">0</span></div>
+        <div class="profile-line"><span class="profile-label">Success rate:</span><span id="profile-rate">0%</span></div>
+        <div class="profile-line"><span class="profile-label">Weak areas:</span><span id="profile-weak">No data yet</span></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const state = {
+      problems: [],
+      currentProblem: null,
+      previewProblem: null,
+      lastRun: null,
+      lastSubmit: null,
+      progress: JSON.parse(localStorage.getItem("cil-progress") || "{\"solved\":{},\"attempts\":0,\"scores\":[]}")
+    };
+
+    const pages = {
+      dashboard: document.getElementById("dashboard-page"),
+      problems: document.getElementById("problems-page"),
+      workspace: document.getElementById("workspace-page"),
+      profile: document.getElementById("profile-page")
+    };
+
+    function showPage(name) {
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.page === name));
+      Object.keys(pages).forEach(key => pages[key].classList.toggle("active", key === name));
+      if (name === "profile" || name === "dashboard") refreshStats();
     }
-  });
-  ed.addEventListener('input', updateLineNumbers);
-  ed.addEventListener('keyup', updateCursor);
-  ed.addEventListener('click', updateCursor);
-  ed.addEventListener('scroll', syncScroll);
-  
-  document.getElementById('langSelect').addEventListener('change', e => {
-    const lang = e.target.value;
-    handleLanguageChange(lang);
-  });
-  
-  updateLineNumbers();
-}
 
-const TRANSLATIONS = {
-  easy: {
-    Python: "def two_sum(nums, target):\n    # Brute force approach (inefficient)\n    for i in range(len(nums)):\n        for j in range(i+1, len(nums)):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []",
-    JavaScript: "function twoSum(nums, target) {\n    // Brute force approach (inefficient)\n    for (let i = 0; i < nums.length; i++) {\n        for (let j = i + 1; j < nums.length; j++) {\n            if (nums[i] + nums[j] === target) {\n                return [i, j];\n            }\n        }\n    }\n    return [];\n}",
-    Java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        // Brute force approach (inefficient)\n        for (int i = 0; i < nums.length; i++) {\n            for (int j = i + 1; j < nums.length; j++) {\n                if (nums[i] + nums[j] == target) {\n                    return new int[] { i, j };\n                }\n            }\n        }\n        return new int[] {};\n    }\n}",
-    "C++": "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        // Brute force approach (inefficient)\n        for (int i = 0; i < nums.size(); i++) {\n            for (int j = i + 1; j < nums.size(); j++) {\n                if (nums[i] + nums[j] == target) {\n                    return {i, j};\n                }\n            }\n        }\n        return {};\n    }\n};",
-    "C#": "public class Solution {\n    public int[] TwoSum(int[] nums, int target) {\n        // Brute force approach (inefficient)\n        for (int i = 0; i < nums.Length; i++) {\n            for (int j = i + 1; j < nums.Length; j++) {\n                if (nums[i] + nums[j] == target) {\n                    return new int[] { i, j };\n                }\n            }\n        }\n        return new int[0];\n    }\n}",
-    Go: "func twoSum(nums []int, target int) []int {\n    // Brute force approach (inefficient)\n    for i := 0; i < len(nums); i++ {\n        for j := i + 1; j < len(nums); j++ {\n            if nums[i]+nums[j] == target {\n                return []int{i, j}\n            }\n        }\n    }\n    return nil\n}",
-    Rust: "impl Solution {\n    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {\n        // Brute force approach (inefficient)\n        for i in 0..nums.len() {\n            for j in (i + 1)..nums.len() {\n                if nums[i] + nums[j] == target {\n                    return vec![i as i32, j as i32];\n                }\n            }\n        }\n        vec![]\n    }\n}",
-    Ruby: "def two_sum(nums, target)\n    # Brute force approach (inefficient)\n    (0...nums.length).each do |i|\n        ((i + 1)...nums.length).each do |j|\n            return [i, j] if nums[i] + nums[j] == target\n        end\n    end\n    []\nend",
-    PHP: "class Solution {\n    function twoSum($nums, $target) {\n        // Brute force approach (inefficient)\n        for ($i = 0; $i < count($nums); $i++) {\n            for ($j = $i + 1; $j < count($nums); $j++) {\n                if ($nums[$i] + $nums[$j] == $target) {\n                    return [$i, $j];\n                }\n            }\n        }\n        return [];\n    }\n}"
-  }
-};
-
-function handleLanguageChange(lang) {
-  const currentCode = document.getElementById('code-editor').value;
-  
-  showLoading(true);
-  document.getElementById('status-state').textContent = 'State: Translating to ' + lang;
-  
-  const stepsContainer = document.querySelector('.loading-steps');
-  const originalStepsDisplay = stepsContainer.style.display || 'flex';
-  stepsContainer.style.display = 'none';
-  
-  const msg = document.createElement('div');
-  msg.id = 'trans-msg';
-  msg.style = 'margin-top:16px; color:var(--accent2); font-size:13px; font-family:var(--font-code)';
-  msg.textContent = '> Syntax mapping to ' + lang + '...';
-  document.querySelector('.loading-card').appendChild(msg);
-  
-  const titleEl = document.querySelector('.loading-card > div:nth-child(2)');
-  const oldTitle = titleEl.textContent;
-  titleEl.textContent = 'AI Language Conversion';
-  
-  setTimeout(() => {
-    showLoading(false);
-    document.getElementById('status-state').textContent = 'State: Idle';
-    stepsContainer.style.display = originalStepsDisplay;
-    titleEl.textContent = oldTitle;
-    if (document.getElementById('trans-msg')) document.getElementById('trans-msg').remove();
-    
-    setEditorCode(mockTranslate(currentCode, lang));
-  }, 900);
-}
-
-function mockTranslate(code, lang) {
-  if (currentDifficulty === 'easy' && TRANSLATIONS.easy[lang] && code.includes('Brute force')) {
-    return TRANSLATIONS.easy[lang];
-  }
-  
-  if (lang === 'JavaScript') return code.replace(/def\\b/g, 'function').replace(/:(\\s*)$/gm, ' {$1').replace(/True|False/g, m => m.toLowerCase()) + '\\n}';
-  if (lang === 'Python') return code.replace(/function\\b/g, 'def').replace(/[{}]/g, '');
-  if (lang === 'Java') return 'class Solution {\\n    // Translated snippet:\\n' + code.split('\\n').map(l=>'    '+l).join('\\n') + '\\n}';
-  if (lang === 'C++') return 'class Solution {\\npublic:\\n    // Translated snippet:\\n' + code.split('\\n').map(l=>'    '+l).join('\\n') + '\\n};';
-  if (lang === 'Go') return code.replace(/def\\b/g, 'func').replace(/:(\\s*)$/gm, ' {$1') + '\\n}';
-  if (lang === 'Rust') return code.replace(/def\\b/g, 'pub fn').replace(/:(\\s*)$/gm, ' {$1') + '\\n}';
-  if (lang === 'Ruby') return code.replace(/def\\s+.*:/g, m => m.replace(/:$/, '')) + '\\nend';
-  return '// Converted to ' + lang + '\\n' + code;
-}
-
-function setEditorCode(code) {
-  document.getElementById('code-editor').value = code;
-  updateLineNumbers();
-}
-
-function updateLineNumbers() {
-  const ed = document.getElementById('code-editor');
-  const lines = ed.value.split('\n').length;
-  const nums = Array.from({length: lines}, (_,i) => i+1).join('\n');
-  document.getElementById('lineNums').textContent = nums;
-}
-
-function updateCursor() {
-  const ed = document.getElementById('code-editor');
-  const txt = ed.value.slice(0, ed.selectionStart);
-  const lines = txt.split('\n');
-  const ln = lines.length;
-  const col = lines[lines.length-1].length + 1;
-  document.getElementById('line-col').textContent = `Ln ${ln}, Col ${col}`;
-}
-
-function syncScroll() {
-  const ed = document.getElementById('code-editor');
-  document.getElementById('lineNums').style.transform = `translateY(-${ed.scrollTop}px)`;
-}
-
-// ============================================================
-// TAB SWITCHING
-// ============================================================
-function showTab(el, targetId) {
-  el.closest('.problem-panel').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  ['problem-tab','testcases-tab','hints-tab'].forEach(id => {
-    document.getElementById(id).style.display = id === targetId ? 'block' : 'none';
-  });
-}
-
-// ============================================================
-// RUN TESTS (fast, no full analysis)
-// ============================================================
-async function runTests() {
-  // Increment attempt count BEFORE running
-  attemptCount += 1;
-
-  document.getElementById('status-state').textContent = `State: Running (Attempt ${attemptCount}/3)`;
-  currentProblem.testCases.forEach((_, i) => {
-    const dot = document.getElementById(`tc-status-${i}`);
-    if (dot) { dot.className = 'tc-status running'; }
-  });
-
-  document.getElementById('output-empty').style.display = 'block';
-  document.getElementById('output-content').style.display = 'none';
-
-  let uiResp = null;
-  try {
-    // Normal run — never request full explanation on 'Run' (only on demand)
-    const payload = await callSubmitAPI(false);
-    if (payload && payload.result) {
-      lastRunResult = payload.result;
-      uiResp = mapPipelineToUi(payload.result);
-    } else {
-      throw new Error("Invalid backend response");
+    function setStatus(text, type = "muted") {
+      const el = document.getElementById("status");
+      el.textContent = text;
+      const colors = { muted: "#94a3b8", ok: "#22c55e", err: "#ef4444", info: "#3b82f6" };
+      el.style.color = colors[type] || colors.muted;
     }
-  } catch (err) {
-    console.error('API Error:', err);
-    alert("🚀 Error: Could not connect to the Backend Analysis engine. Please check if the server is running.");
-    document.getElementById('status-state').textContent = 'State: Connection Error';
-    attemptCount -= 1; // Rollback on error
-    return;
-  }
 
-  uiResp.test_results.cases.forEach((pass, i) => {
-    const dot = document.getElementById(`tc-status-${i}`);
-    if (dot) dot.className = `tc-status ${pass ? 'pass' : 'fail'}`;
-  });
-
-  renderOutput(uiResp);
-
-  const tabs = document.querySelectorAll('.tab');
-  tabs.forEach(t => t.classList.remove('active'));
-  tabs[1].classList.add('active');
-  document.getElementById('testcases-tab').style.display = 'block';
-  document.getElementById('problem-tab').style.display = 'none';
-  document.getElementById('hints-tab').style.display = 'none';
-  document.getElementById('status-state').textContent = `State: Done (Attempt ${attemptCount}/3)`;
-}
-
-// Called when student clicks "Get Full AI Explanation" after hints exhausted
-async function requestFullExplanation() {
-  const btn = document.getElementById('fullExplanationBtn');
-  if (btn) { btn.textContent = '⏳ Fetching full diagnosis...'; btn.disabled = true; }
-
-  try {
-    const payload = await callSubmitAPI(true); // want_full_explanation = true
-    if (payload && payload.result) {
-      lastRunResult = payload.result;
-      const uiResp = mapPipelineToUi(payload.result);
-      renderOutput(uiResp);
+    function saveProgress() {
+      localStorage.setItem("cil-progress", JSON.stringify(state.progress));
+      refreshStats();
     }
-  } catch (err) {
-    console.error('Full explanation error:', err);
-    if (btn) { btn.textContent = '🔍 Get Full AI Explanation'; btn.disabled = false; }
-  }
-}
 
-// ============================================================
-// SUBMIT (full analysis)
-// ============================================================
-async function submitCode() {
-  const btn = document.getElementById('submitBtn');
-  
-  // LEETCODE-STYLE: Only allow submission if tests pass
-  const passedTcs = document.querySelectorAll('.tc-status.pass').length;
-  const totalTcs = currentProblem.testCases.length;
-  
-  if (passedTcs < totalTcs && totalTcs > 0) {
-    alert("⚠️ SUBMISSION RESTRICTED: All test cases must pass for final evaluation (LeetCode style). \n\nUse the '▶ Run' button at the top to see the AI Tutor's breakdown and fix your errors first!");
-    return;
-  }
+    function refreshStats() {
+      const solvedCount = Object.keys(state.progress.solved).length;
+      const scores = state.progress.scores || [];
+      const avg = scores.length ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100) : 0;
+      const streak = solvedCount;
+      document.getElementById("stat-solved").textContent = solvedCount;
+      document.getElementById("stat-avg").textContent = avg + "%";
+      document.getElementById("stat-streak").textContent = streak;
+      document.getElementById("profile-solved").textContent = solvedCount;
+      document.getElementById("profile-rate").textContent = avg + "%";
+      document.getElementById("profile-weak").textContent = avg > 70 ? "None notable" : "Edge cases, optimization";
+    }
 
-  btn.classList.add('loading');
-  btn.textContent = 'Analyzing...';
+    function diffClass(difficulty) {
+      const d = (difficulty || "easy").toLowerCase();
+      if (d === "hard") return "hard";
+      if (d === "medium") return "medium";
+      return "easy";
+    }
 
-  showLoading(true);
-  document.getElementById('status-state').textContent = 'State: Running RL Agent';
-
-  const steps = ['ls1','ls2','ls3','ls4','ls5','ls6'];
-  const delays = [600, 1100, 1700, 2300, 3000, 3700];
-  const apiResultPromise = callSubmitAPI()
-    .then(payload => {
-      if (payload && payload.result) {
-        return mapPipelineToUi(payload.result);
+    async function api(path, options = {}) {
+      const res = await fetch(path, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+      });
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || `HTTP ${res.status}`);
       }
-      throw new Error("Invalid response");
-    })
-    .catch(err => {
-      console.error('Submit API Error:', err);
-      return null;
-    });
+      return res.json();
+    }
 
-  steps.forEach((id, i) => {
-    setTimeout(() => {
-      if (i > 0) {
-        const prev = document.getElementById(steps[i-1]);
-        prev.classList.remove('active');
-        prev.classList.add('done');
-        prev.querySelector('.step-icon').textContent = '✓';
+    async function loadProblems() {
+      const data = await api("/problems");
+      state.problems = data.items || [];
+      renderProblemList(state.problems);
+      if (state.problems.length) {
+        await previewProblem(state.problems[0].id);
       }
-      const cur = document.getElementById(id);
-      cur.classList.add('active');
-    }, delays[i]);
-  });
+    }
 
-  setTimeout(async () => {
-    const last = document.getElementById('ls6');
-    last.classList.remove('active');
-    last.classList.add('done');
-    last.querySelector('.step-icon').textContent = '✓';
+    function renderProblemList(items) {
+      const list = document.getElementById("problem-list");
+      list.innerHTML = "";
+      items.forEach(p => {
+        const li = document.createElement("li");
+        li.dataset.problemId = p.id;
+        li.innerHTML = `<span class="p-title">${p.title}</span><span class="diff ${diffClass(p.difficulty)}">${p.difficulty}</span>`;
+        li.addEventListener("click", () => previewProblem(p.id));
+        list.appendChild(li);
+      });
+    }
 
-    setTimeout(async () => {
-      showLoading(false);
-      btn.classList.remove('loading');
-      btn.textContent = 'Submit →';
-      document.getElementById('status-state').textContent = 'State: Done';
+    async function previewProblem(problemId) {
+      const p = await api(`/problems/${problemId}`);
+      state.previewProblem = p;
 
-      const resp = await apiResultPromise;
-      if (!resp) {
-        alert("⚠️ Analysis failed. Please check your code syntax or try again.");
-        return;
-      }
-      renderOutput(resp);
-
-      // Update test case statuses
-      resp.test_results.cases.forEach((pass, i) => {
-        const dot = document.getElementById(`tc-status-${i}`);
-        if (dot) dot.className = `tc-status ${pass ? 'pass' : 'fail'}`;
+      document.querySelectorAll("#problem-list li").forEach(li => {
+        li.classList.toggle("active", li.dataset.problemId === problemId);
       });
 
-      // Reset loading steps
-      steps.forEach(id => {
-        const el = document.getElementById(id);
-        el.className = 'loading-step';
-        el.querySelector('.step-icon').textContent = '○';
+      document.getElementById("pd-title").textContent = p.title;
+      document.getElementById("pd-id").textContent = p.id;
+      const diffEl = document.getElementById("pd-diff");
+      diffEl.textContent = p.difficulty;
+      diffEl.className = `diff ${diffClass(p.difficulty)}`;
+      document.getElementById("pd-desc").textContent = p.description || "No description";
+      document.getElementById("pd-constraints").textContent = p.constraints || "N/A";
+      document.getElementById("pd-approach").textContent = p.expected_approach || "N/A";
+
+      const examplesEl = document.getElementById("pd-examples");
+      const samples = p.sample_test_cases || [];
+      if (samples.length) {
+        examplesEl.innerHTML = samples
+          .map((tc, i) => `<div class=\"ws-example\">Example ${i + 1}\nInput: ${JSON.stringify(tc.input)}\nOutput: ${JSON.stringify(tc.expected_output)}</div>`)
+          .join("");
+      } else {
+        examplesEl.textContent = "No examples available.";
+      }
+    }
+
+    async function selectProblem(problemId) {
+      const p = await api(`/problems/${problemId}`);
+      state.currentProblem = p;
+      state.lastRun = null;
+      state.lastSubmit = null;
+      document.getElementById("ws-title").textContent = p.title;
+      document.getElementById("ws-id").textContent = p.id;
+      const diffEl = document.getElementById("ws-diff");
+      diffEl.textContent = p.difficulty;
+      diffEl.className = `diff ${diffClass(p.difficulty)}`;
+      document.getElementById("ws-desc").textContent = p.description;
+      document.getElementById("ws-constraints").textContent = p.constraints || "N/A";
+
+      const approachRow = document.getElementById("ws-approach-row");
+      approachRow.innerHTML = "";
+      const approach = p.expected_approach || "N/A";
+      const aChip = document.createElement("span");
+      aChip.className = "ws-chip";
+      aChip.textContent = approach;
+      approachRow.appendChild(aChip);
+
+      const complexityRow = document.getElementById("ws-complexity-row");
+      complexityRow.innerHTML = "";
+      const time = (p.expected_complexity || {}).time || "N/A";
+      const space = (p.expected_complexity || {}).space || "N/A";
+      const tChip = document.createElement("span");
+      tChip.className = "ws-chip";
+      tChip.textContent = `Time: ${time}`;
+      const sChip = document.createElement("span");
+      sChip.className = "ws-chip";
+      sChip.textContent = `Space: ${space}`;
+      complexityRow.appendChild(tChip);
+      complexityRow.appendChild(sChip);
+
+      const examples = document.getElementById("ws-examples");
+      const sampleTests = p.sample_test_cases || [];
+      if (sampleTests.length) {
+        examples.innerHTML = sampleTests
+          .map((tc, i) => `<div class=\"ws-example\">Example ${i + 1}\nInput: ${JSON.stringify(tc.input)}\nOutput: ${JSON.stringify(tc.expected_output)}</div>`)
+          .join("");
+      } else {
+        examples.textContent = "No sample examples available.";
+      }
+
+      document.getElementById("editor").value = "";
+      document.getElementById("results-summary").textContent = "Run your code to see test results.";
+      document.getElementById("failed-cases").innerHTML = "";
+      document.getElementById("analysis-text").textContent = "Click Analyze to detect approach and complexity.";
+      document.getElementById("optimization-text").textContent = "Click Optimize for improvement suggestions.";
+      document.getElementById("optimized-code").style.display = "none";
+      setStatus("Problem loaded. Type your solution and run.", "info");
+      showPage("workspace");
+    }
+
+    function setSegment(viewName) {
+      const views = ["results", "analysis", "optimization"];
+      const idx = views.indexOf(viewName);
+      document.getElementById("segment-slider").style.transform = `translateX(${idx * 100}%)`;
+      document.querySelectorAll(".segment").forEach(btn => btn.classList.toggle("active", btn.dataset.view === viewName));
+      views.forEach(v => document.getElementById(`view-${v}`).classList.toggle("active", v === viewName));
+    }
+
+    function efficiencyLabel(timeComplexity) {
+      const t = (timeComplexity || "Unknown").toLowerCase();
+      if (t.includes("o(n)") && !t.includes("n^2")) return "Good ⚡";
+      if (t.includes("o(1)") || t.includes("log")) return "High ⚡";
+      if (t.includes("n^2") || t.includes("n^3")) return "Average ⚡";
+      return "Average ⚡";
+    }
+
+    async function runCode() {
+      if (!state.currentProblem) { setStatus("Select a problem first.", "err"); showPage("problems"); return; }
+      const code = document.getElementById("editor").value.trim();
+      if (!code) { setStatus("Type code first. No predefined solution is provided.", "err"); return; }
+
+      setStatus("Running tests...", "info");
+      try {
+        const data = await api("/workspace/run", {
+          method: "POST",
+          body: JSON.stringify({ problem_id: state.currentProblem.id, code, attempt_number: 1, want_full_explanation: true })
+        });
+        state.lastRun = data.result;
+        const summary = data.result.run_test_summary || {};
+        const passed = summary.passed || 0;
+        const total = summary.total || 0;
+        document.getElementById("results-summary").textContent = `${passed} / ${total} Test Cases Passed`;
+
+        const failedWrap = document.getElementById("failed-cases");
+        failedWrap.innerHTML = "";
+        (summary.results || []).filter(r => !r.passed).slice(0, 3).forEach(f => {
+          const box = document.createElement("div");
+          box.className = "case";
+          box.textContent = `Input: ${JSON.stringify(f.inputs)}\nExpected: ${JSON.stringify(f.expected)}\nActual: ${JSON.stringify(f.actual)}\nError: ${f.error || "Wrong answer"}`;
+          failedWrap.appendChild(box);
+        });
+
+        setStatus("Running tests... ✔ Completed", passed === total ? "ok" : "err");
+        setSegment("results");
+      } catch (err) {
+        setStatus(`Run failed: ${String(err.message || err)}`, "err");
+      }
+    }
+
+    async function analyzeCode() {
+      if (!state.currentProblem) { setStatus("Select a problem first.", "err"); return; }
+      const code = document.getElementById("editor").value.trim();
+      if (!code) { setStatus("Type code first.", "err"); return; }
+
+      setStatus("Analyzing solution...", "info");
+      try {
+        const data = await api("/workspace/submit", {
+          method: "POST",
+          body: JSON.stringify({ problem_id: state.currentProblem.id, code, attempt_number: 1, want_full_explanation: false })
+        });
+        state.lastSubmit = data.result;
+        const app = data.result.approach_comparison || {};
+        const cmp = data.result.complexity_comparison || {};
+        const approach = app.user_approach || "Unknown";
+        const time = cmp.user ? cmp.user.time : "Unknown";
+        const text = `Detected approach: ${approach}. Time complexity: ${time}. Your solution pattern has been identified for this problem.`;
+        document.getElementById("analysis-text").textContent = text;
+        document.getElementById("eff-value").textContent = efficiencyLabel(time);
+        setStatus(`Analyzing solution... ✔ ${approach} detected`, "ok");
+        setSegment("analysis");
+      } catch (err) {
+        setStatus(`Analyze failed: ${String(err.message || err)}`, "err");
+      }
+    }
+
+    async function optimizeCode() {
+      if (!state.currentProblem) { setStatus("Select a problem first.", "err"); return; }
+      const code = document.getElementById("editor").value.trim();
+      if (!code) { setStatus("Type code first.", "err"); return; }
+
+      setStatus("Optimizing suggestion...", "info");
+      try {
+        const data = await api("/workspace/submit", {
+          method: "POST",
+          body: JSON.stringify({ problem_id: state.currentProblem.id, code, attempt_number: 1, want_full_explanation: true })
+        });
+
+        state.lastSubmit = data.result;
+        const best = (data.result.optimization || {}).best || {};
+        const cmp = data.result.complexity_comparison || {};
+        const needed = data.result.optimization_needed;
+        const text = needed
+          ? `Better approach: ${best.approach || "Optimized approach"}. Complexity improvement: ${(cmp.user || {}).time || "Unknown"} -> ${(cmp.optimized || {}).time || "Unknown"}. Use the suggestion below.`
+          : `Your solution is already near-optimal. No major complexity upgrade needed.`;
+        document.getElementById("optimization-text").textContent = text;
+
+        const codeBox = document.getElementById("optimized-code");
+        const optCode = best.optimized_code || "";
+        if (optCode.trim()) {
+          codeBox.style.display = "block";
+          codeBox.textContent = optCode;
+        } else {
+          codeBox.style.display = "none";
+        }
+
+        const score = data.result.final_score;
+        if (typeof score === "number") {
+          state.progress.scores.push(score);
+        }
+        if (data.result.accepted === true) {
+          state.progress.solved[state.currentProblem.id] = true;
+        }
+        state.progress.attempts += 1;
+        saveProgress();
+
+        setStatus("Optimization completed ✔", "ok");
+        setSegment("optimization");
+      } catch (err) {
+        setStatus(`Optimize failed: ${String(err.message || err)}`, "err");
+      }
+    }
+
+    function initEvents() {
+      document.querySelectorAll(".nav-btn").forEach(btn => btn.addEventListener("click", () => showPage(btn.dataset.page)));
+      document.getElementById("continue-btn").addEventListener("click", () => {
+        const next = state.problems.find(p => !state.progress.solved[p.id]) || state.problems[0];
+        if (next) selectProblem(next.id);
+        else showPage("problems");
       });
-    }, 400);
-  }, 4200);
-}
-
-function showLoading(show) {
-  document.getElementById('loadingOverlay').classList.toggle('show', show);
-}
-
-function clearOutput() {
-  document.getElementById('output-empty').style.display = 'flex';
-  document.getElementById('output-content').style.display = 'none';
-  document.getElementById('output-content').innerHTML = '';
-}
-
-// ============================================================
-// RENDER OUTPUT
-// ============================================================
-function renderOutput(resp) {
-  document.getElementById('output-empty').style.display = 'none';
-  const container = document.getElementById('output-content');
-  container.style.display = 'flex';
-
-  const { passed, total, cases } = resp.test_results;
-  const allPassed = passed === total && total > 0;
-  const scorePercent = Math.round(resp.score.total * 100);
-
-  let html = '';
-
-  // --- SCORE CARD ---
-  if (allPassed) {
-    html += `<div class="result-card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-dot dot-success"></div>
-          Overall Score
-        </div>
-        <span style="font-size:11px; color:var(--muted)">${passed}/${total} tests passed</span>
-      </div>
-      <div class="card-body">
-        <div class="score-display">
-          <div class="score-num" id="score-num">0%</div>
-          <div style="text-align:right; font-size:12px; color:var(--muted)">
-            <div>✓ All Correct</div>
-            <div style="margin-top:2px">Score: ${resp.score.total.toFixed(2)}</div>
-          </div>
-        </div>
-        <div class="score-bar-wrap"><div class="score-bar" id="score-bar"></div></div>
-        <div class="score-breakdown">
-          <div class="breakdown-item">
-            <div class="breakdown-val" style="color:var(--danger)">${Math.round(resp.score.bug*100)}%</div>
-            <div class="breakdown-label">Bug Detection</div>
-          </div>
-          <div class="breakdown-item">
-            <div class="breakdown-val" style="color:var(--warn)">${Math.round(resp.score.explanation*100)}%</div>
-            <div class="breakdown-label">Explanation</div>
-          </div>
-          <div class="breakdown-item">
-            <div class="breakdown-val" style="color:var(--accent2)">${Math.round(resp.score.optimization*100)}%</div>
-            <div class="breakdown-label">Optimization</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  // --- TEST RESULTS ---
-  html += `<div class="result-card">
-    <div class="card-header">
-      <div class="card-title"><div class="card-dot ${allPassed ? 'dot-success' : 'dot-fail'}"></div>Test Results</div>
-    </div>
-    <div class="card-body">
-      <div class="tc-results-grid">`;
-  cases.forEach((pass, i) => {
-    html += `<div class="tc-result-item">
-      <div class="tc-r-dot" style="background:${pass ? 'var(--success)' : 'var(--danger)'}"></div>
-      <span style="color:var(--muted)">Case ${i+1}</span>
-      <span style="color:${pass ? 'var(--success)' : 'var(--danger)'}; margin-left:auto">${pass ? 'PASS' : 'FAIL'}</span>
-    </div>`;
-  });
-  html += `</div></div></div>`;
-
-  // === AI TUTOR SECTION (only shown when there are failures) ===
-  if (!allPassed) {
-    const attemptNum = resp.attempt_number || attemptCount || 1;
-    const hintsExhausted = resp.hints_exhausted || attemptNum >= 3;
-
-    // CARD A: Hint (syntax / logic / runtime crash) - shown when code has errors
-    if (resp.bug_explanation) {
-      const hintNum = Math.min(attemptNum, 3);
-      const remaining = 3 - attemptNum;
-      const isFullDiag = hintsExhausted;
-      const cardTitle = isFullDiag ? '🔍 AI Tutor: Full Diagnosis' : `💡 AI Tutor: Hint ${hintNum}/3`;
-      const hintColor = isFullDiag ? '#f8b0bc' : '#ffd980';
-      const borderColor = isFullDiag ? 'rgba(247,92,124,0.3)' : 'rgba(255,185,0,0.25)';
-      const bgColor = isFullDiag ? 'rgba(247,92,124,0.05)' : 'rgba(255,185,0,0.04)';
-
-      html += `<div class="result-card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-dot ${isFullDiag ? 'dot-fail' : 'dot-info'}"></div>
-            ${cardTitle}
-          </div>
-          ${!isFullDiag ? `<span style="font-size:11px;color:var(--muted)">${remaining} hint${remaining!==1?'s':''} left</span>` : ''}
-        </div>
-        <div class="card-body">
-          <div style="background:${bgColor};border:1px solid ${borderColor};border-radius:8px;padding:14px;">
-            <div style="font-size:12.5px;white-space:pre-wrap;line-height:1.8;color:${hintColor}">${resp.bug_explanation}</div>
-          </div>
-          <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">
-              ${isFullDiag ? 'You have seen the full diagnosis above.' : 'Want a deeper breakdown? Click below anytime:'}
-            </div>
-            <button id="fullExplanationBtn" onclick="requestFullExplanation()" ${isFullDiag ? 'disabled style="opacity:0.5;"' : ''}
-              style="background:linear-gradient(135deg,#7c6af7,#f75c7c);color:white;border:none;border-radius:8px;
-                     padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;width:100%;">
-              🔍 ${isFullDiag ? 'Full Explanation Shown Above' : 'Get Full AI Explanation'}
-            </button>
-          </div>
-        </div>
-      </div>`;
+      document.getElementById("open-workspace-btn").addEventListener("click", () => {
+        const chosen = state.previewProblem || state.problems[0];
+        if (chosen) selectProblem(chosen.id);
+      });
+      document.getElementById("search").addEventListener("input", e => {
+        const q = e.target.value.toLowerCase().trim();
+        const filtered = state.problems.filter(p =>
+          (p.title || "").toLowerCase().includes(q) ||
+          (p.tags || []).join(" ").toLowerCase().includes(q)
+        );
+        renderProblemList(filtered);
+        if (filtered.length) {
+          previewProblem(filtered[0].id);
+        }
+      });
+      document.querySelectorAll(".segment").forEach(btn => btn.addEventListener("click", () => setSegment(btn.dataset.view)));
+      document.getElementById("run-btn").addEventListener("click", runCode);
+      document.getElementById("analyze-btn").addEventListener("click", analyzeCode);
+      document.getElementById("optimize-btn").addEventListener("click", optimizeCode);
     }
 
-    // CARD B: Test Case Failure (wrong answer or TLE) - code ran fine but wrong output
-    if (resp.failure_explanation) {
-      html += `<div class="result-card">
-        <div class="card-header">
-          <div class="card-title">
-            <div class="card-dot dot-fail"></div>
-            ❌ Why Your Test Case Failed
-          </div>
-        </div>
-        <div class="card-body">
-          <div style="background:rgba(247,92,124,0.05);border:1px solid rgba(247,92,124,0.25);border-radius:8px;padding:14px;">
-            <div style="font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:var(--accent3)">
-              <span style="font-size:16px">🤖</span> AI Tutor — Test Failure Analysis
-            </div>
-            <div style="font-size:12.5px;white-space:pre-wrap;line-height:1.8;color:#f8b0bc">${resp.failure_explanation}</div>
-          </div>
-        </div>
-      </div>`;
+    async function boot() {
+      try {
+        initEvents();
+        refreshStats();
+        await loadProblems();
+        setStatus("Ready. Pick a problem and start coding.", "info");
+      } catch (err) {
+        setStatus(`Failed to initialize UI: ${String(err.message || err)}`, "err");
+      }
     }
 
-    // SHOW FULL EXPLANATION BUTTON (if hints used up but no content yet)
-    if (hintsExhausted && !resp.bug_explanation && !resp.failure_explanation) {
-      html += `<div class="result-card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-dot dot-info"></div>AI Tutor Available</div>
-        </div>
-        <div class="card-body">
-          <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
-            You have used all 3 hints. Would you like a complete line-by-line breakdown from the AI Tutor?
-          </div>
-          <button id="fullExplanationBtn" onclick="requestFullExplanation()"
-            style="background:linear-gradient(135deg,#7c6af7,#f75c7c);color:white;border:none;border-radius:8px;
-                   padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;width:100%;">
-            🔍 Get Full AI Explanation
-          </button>
-        </div>
-      </div>`;
-    }
-  }
-
-  // === OPTIMIZATION AND REWARDS (only when all tests pass) ===
-  if (allPassed) {
-    if (resp.optimization && resp.optimization.approach !== 'No optimization candidate') {
-      html += `<div class="result-card">
-        <div class="card-header">
-          <div class="card-title"><div class="card-dot dot-accent2"></div>Optimized Solution</div>
-          <span style="font-size:11px;background:rgba(91,212,180,0.1);color:var(--accent2);padding:2px 7px;border-radius:4px">→ ${resp.optimization.approach}</span>
-        </div>
-        <div class="card-body">
-          <div class="suggest-block">${resp.optimization.explanation}</div>
-        </div>
-      </div>`;
-    }
-
-    html += `<div class="result-card">
-      <div class="card-header">
-        <div class="card-title"><div class="card-dot dot-info"></div>RL Reward Trace</div>
-      </div>
-      <div class="card-body">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Agent actions &amp; rewards:</div>
-        <div class="reward-timeline">`;
-    resp.reward_trace.forEach(r => {
-      const pos = r.startsWith('+');
-      html += `<div class="reward-chip ${pos ? 'reward-pos' : 'reward-neg'}">${r}</div>`;
-    });
-    html += `</div></div></div>`;
-  }
-
-  container.innerHTML = html;
-
-  // Animate score bar (only when all passed)
-  if (allPassed) {
-    setTimeout(() => {
-      const bar = document.getElementById('score-bar');
-      if (bar) bar.style.width = scorePercent + '%';
-      animateNumber('score-num', 0, scorePercent, 1000, v => v + '%');
-    }, 100);
-  }
-}
-
-function animateNumber(id, from, to, duration, fmt) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const start = performance.now();
-  function tick(now) {
-    const t = Math.min((now - start) / duration, 1);
-    const ease = 1 - Math.pow(1-t, 3);
-    el.textContent = fmt(Math.round(from + (to-from)*ease));
-    if (t < 1) requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-}
-
-function escapeHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// ============================================================
-// START
-// ============================================================
-init();
-</script>
+    boot();
+  </script>
 </body>
 </html>

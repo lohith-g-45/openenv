@@ -1,0 +1,3202 @@
+[
+  {
+    "id": "p1",
+    "title": "Problem 1",
+    "difficulty": "easy",
+    "description": "This is problem 1. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 1
+        },
+        "expected_output": 1
+      },
+      {
+        "input": {
+          "n": 2
+        },
+        "expected_output": 2
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p2",
+    "title": "Problem 2",
+    "difficulty": "easy",
+    "description": "This is problem 2. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 2
+        },
+        "expected_output": 2
+      },
+      {
+        "input": {
+          "n": 3
+        },
+        "expected_output": 3
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p3",
+    "title": "Problem 3",
+    "difficulty": "easy",
+    "description": "This is problem 3. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 3
+        },
+        "expected_output": 3
+      },
+      {
+        "input": {
+          "n": 4
+        },
+        "expected_output": 4
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p4",
+    "title": "Problem 4",
+    "difficulty": "easy",
+    "description": "This is problem 4. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 4
+        },
+        "expected_output": 4
+      },
+      {
+        "input": {
+          "n": 5
+        },
+        "expected_output": 5
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p5",
+    "title": "Problem 5",
+    "difficulty": "easy",
+    "description": "This is problem 5. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 5
+        },
+        "expected_output": 5
+      },
+      {
+        "input": {
+          "n": 6
+        },
+        "expected_output": 6
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p6",
+    "title": "Problem 6",
+    "difficulty": "easy",
+    "description": "This is problem 6. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 6
+        },
+        "expected_output": 6
+      },
+      {
+        "input": {
+          "n": 7
+        },
+        "expected_output": 7
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p7",
+    "title": "Problem 7",
+    "difficulty": "easy",
+    "description": "This is problem 7. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 7
+        },
+        "expected_output": 7
+      },
+      {
+        "input": {
+          "n": 8
+        },
+        "expected_output": 8
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p8",
+    "title": "Problem 8",
+    "difficulty": "easy",
+    "description": "This is problem 8. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 8
+        },
+        "expected_output": 8
+      },
+      {
+        "input": {
+          "n": 9
+        },
+        "expected_output": 9
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p9",
+    "title": "Problem 9",
+    "difficulty": "easy",
+    "description": "This is problem 9. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 9
+        },
+        "expected_output": 9
+      },
+      {
+        "input": {
+          "n": 10
+        },
+        "expected_output": 10
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p10",
+    "title": "Problem 10",
+    "difficulty": "easy",
+    "description": "This is problem 10. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 10
+        },
+        "expected_output": 10
+      },
+      {
+        "input": {
+          "n": 11
+        },
+        "expected_output": 11
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p11",
+    "title": "Problem 11",
+    "difficulty": "easy",
+    "description": "This is problem 11. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 11
+        },
+        "expected_output": 11
+      },
+      {
+        "input": {
+          "n": 12
+        },
+        "expected_output": 12
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p12",
+    "title": "Problem 12",
+    "difficulty": "easy",
+    "description": "This is problem 12. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 12
+        },
+        "expected_output": 12
+      },
+      {
+        "input": {
+          "n": 13
+        },
+        "expected_output": 13
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p13",
+    "title": "Problem 13",
+    "difficulty": "easy",
+    "description": "This is problem 13. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 13
+        },
+        "expected_output": 13
+      },
+      {
+        "input": {
+          "n": 14
+        },
+        "expected_output": 14
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p14",
+    "title": "Problem 14",
+    "difficulty": "easy",
+    "description": "This is problem 14. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 14
+        },
+        "expected_output": 14
+      },
+      {
+        "input": {
+          "n": 15
+        },
+        "expected_output": 15
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p15",
+    "title": "Problem 15",
+    "difficulty": "easy",
+    "description": "This is problem 15. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 15
+        },
+        "expected_output": 15
+      },
+      {
+        "input": {
+          "n": 16
+        },
+        "expected_output": 16
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p16",
+    "title": "Problem 16",
+    "difficulty": "easy",
+    "description": "This is problem 16. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 16
+        },
+        "expected_output": 16
+      },
+      {
+        "input": {
+          "n": 17
+        },
+        "expected_output": 17
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p17",
+    "title": "Problem 17",
+    "difficulty": "easy",
+    "description": "This is problem 17. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 17
+        },
+        "expected_output": 17
+      },
+      {
+        "input": {
+          "n": 18
+        },
+        "expected_output": 18
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p18",
+    "title": "Problem 18",
+    "difficulty": "easy",
+    "description": "This is problem 18. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 18
+        },
+        "expected_output": 18
+      },
+      {
+        "input": {
+          "n": 19
+        },
+        "expected_output": 19
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p19",
+    "title": "Problem 19",
+    "difficulty": "easy",
+    "description": "This is problem 19. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 19
+        },
+        "expected_output": 19
+      },
+      {
+        "input": {
+          "n": 20
+        },
+        "expected_output": 20
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p20",
+    "title": "Problem 20",
+    "difficulty": "easy",
+    "description": "This is problem 20. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 20
+        },
+        "expected_output": 20
+      },
+      {
+        "input": {
+          "n": 21
+        },
+        "expected_output": 21
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p21",
+    "title": "Problem 21",
+    "difficulty": "easy",
+    "description": "This is problem 21. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 21
+        },
+        "expected_output": 21
+      },
+      {
+        "input": {
+          "n": 22
+        },
+        "expected_output": 22
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p22",
+    "title": "Problem 22",
+    "difficulty": "easy",
+    "description": "This is problem 22. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 22
+        },
+        "expected_output": 22
+      },
+      {
+        "input": {
+          "n": 23
+        },
+        "expected_output": 23
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p23",
+    "title": "Problem 23",
+    "difficulty": "easy",
+    "description": "This is problem 23. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 23
+        },
+        "expected_output": 23
+      },
+      {
+        "input": {
+          "n": 24
+        },
+        "expected_output": 24
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p24",
+    "title": "Problem 24",
+    "difficulty": "easy",
+    "description": "This is problem 24. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 24
+        },
+        "expected_output": 24
+      },
+      {
+        "input": {
+          "n": 25
+        },
+        "expected_output": 25
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p25",
+    "title": "Problem 25",
+    "difficulty": "easy",
+    "description": "This is problem 25. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 25
+        },
+        "expected_output": 25
+      },
+      {
+        "input": {
+          "n": 26
+        },
+        "expected_output": 26
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p26",
+    "title": "Problem 26",
+    "difficulty": "easy",
+    "description": "This is problem 26. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 26
+        },
+        "expected_output": 26
+      },
+      {
+        "input": {
+          "n": 27
+        },
+        "expected_output": 27
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p27",
+    "title": "Problem 27",
+    "difficulty": "easy",
+    "description": "This is problem 27. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 27
+        },
+        "expected_output": 27
+      },
+      {
+        "input": {
+          "n": 28
+        },
+        "expected_output": 28
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p28",
+    "title": "Problem 28",
+    "difficulty": "easy",
+    "description": "This is problem 28. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 28
+        },
+        "expected_output": 28
+      },
+      {
+        "input": {
+          "n": 29
+        },
+        "expected_output": 29
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p29",
+    "title": "Problem 29",
+    "difficulty": "easy",
+    "description": "This is problem 29. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 29
+        },
+        "expected_output": 29
+      },
+      {
+        "input": {
+          "n": 30
+        },
+        "expected_output": 30
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p30",
+    "title": "Problem 30",
+    "difficulty": "easy",
+    "description": "This is problem 30. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 30
+        },
+        "expected_output": 30
+      },
+      {
+        "input": {
+          "n": 31
+        },
+        "expected_output": 31
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p31",
+    "title": "Problem 31",
+    "difficulty": "medium",
+    "description": "This is problem 31. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 31
+        },
+        "expected_output": 31
+      },
+      {
+        "input": {
+          "n": 32
+        },
+        "expected_output": 32
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p32",
+    "title": "Problem 32",
+    "difficulty": "medium",
+    "description": "This is problem 32. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 32
+        },
+        "expected_output": 32
+      },
+      {
+        "input": {
+          "n": 33
+        },
+        "expected_output": 33
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p33",
+    "title": "Problem 33",
+    "difficulty": "medium",
+    "description": "This is problem 33. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 33
+        },
+        "expected_output": 33
+      },
+      {
+        "input": {
+          "n": 34
+        },
+        "expected_output": 34
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p34",
+    "title": "Problem 34",
+    "difficulty": "medium",
+    "description": "This is problem 34. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 34
+        },
+        "expected_output": 34
+      },
+      {
+        "input": {
+          "n": 35
+        },
+        "expected_output": 35
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p35",
+    "title": "Problem 35",
+    "difficulty": "medium",
+    "description": "This is problem 35. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 35
+        },
+        "expected_output": 35
+      },
+      {
+        "input": {
+          "n": 36
+        },
+        "expected_output": 36
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p36",
+    "title": "Problem 36",
+    "difficulty": "medium",
+    "description": "This is problem 36. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 36
+        },
+        "expected_output": 36
+      },
+      {
+        "input": {
+          "n": 37
+        },
+        "expected_output": 37
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p37",
+    "title": "Problem 37",
+    "difficulty": "medium",
+    "description": "This is problem 37. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 37
+        },
+        "expected_output": 37
+      },
+      {
+        "input": {
+          "n": 38
+        },
+        "expected_output": 38
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p38",
+    "title": "Problem 38",
+    "difficulty": "medium",
+    "description": "This is problem 38. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 38
+        },
+        "expected_output": 38
+      },
+      {
+        "input": {
+          "n": 39
+        },
+        "expected_output": 39
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p39",
+    "title": "Problem 39",
+    "difficulty": "medium",
+    "description": "This is problem 39. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 39
+        },
+        "expected_output": 39
+      },
+      {
+        "input": {
+          "n": 40
+        },
+        "expected_output": 40
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p40",
+    "title": "Problem 40",
+    "difficulty": "medium",
+    "description": "This is problem 40. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 40
+        },
+        "expected_output": 40
+      },
+      {
+        "input": {
+          "n": 41
+        },
+        "expected_output": 41
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p41",
+    "title": "Problem 41",
+    "difficulty": "medium",
+    "description": "This is problem 41. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 41
+        },
+        "expected_output": 41
+      },
+      {
+        "input": {
+          "n": 42
+        },
+        "expected_output": 42
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p42",
+    "title": "Problem 42",
+    "difficulty": "medium",
+    "description": "This is problem 42. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 42
+        },
+        "expected_output": 42
+      },
+      {
+        "input": {
+          "n": 43
+        },
+        "expected_output": 43
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p43",
+    "title": "Problem 43",
+    "difficulty": "medium",
+    "description": "This is problem 43. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 43
+        },
+        "expected_output": 43
+      },
+      {
+        "input": {
+          "n": 44
+        },
+        "expected_output": 44
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p44",
+    "title": "Problem 44",
+    "difficulty": "medium",
+    "description": "This is problem 44. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 44
+        },
+        "expected_output": 44
+      },
+      {
+        "input": {
+          "n": 45
+        },
+        "expected_output": 45
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p45",
+    "title": "Problem 45",
+    "difficulty": "medium",
+    "description": "This is problem 45. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 45
+        },
+        "expected_output": 45
+      },
+      {
+        "input": {
+          "n": 46
+        },
+        "expected_output": 46
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p46",
+    "title": "Problem 46",
+    "difficulty": "medium",
+    "description": "This is problem 46. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 46
+        },
+        "expected_output": 46
+      },
+      {
+        "input": {
+          "n": 47
+        },
+        "expected_output": 47
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p47",
+    "title": "Problem 47",
+    "difficulty": "medium",
+    "description": "This is problem 47. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 47
+        },
+        "expected_output": 47
+      },
+      {
+        "input": {
+          "n": 48
+        },
+        "expected_output": 48
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p48",
+    "title": "Problem 48",
+    "difficulty": "medium",
+    "description": "This is problem 48. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 48
+        },
+        "expected_output": 48
+      },
+      {
+        "input": {
+          "n": 49
+        },
+        "expected_output": 49
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p49",
+    "title": "Problem 49",
+    "difficulty": "medium",
+    "description": "This is problem 49. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 49
+        },
+        "expected_output": 49
+      },
+      {
+        "input": {
+          "n": 50
+        },
+        "expected_output": 50
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p50",
+    "title": "Problem 50",
+    "difficulty": "medium",
+    "description": "This is problem 50. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 50
+        },
+        "expected_output": 50
+      },
+      {
+        "input": {
+          "n": 51
+        },
+        "expected_output": 51
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p51",
+    "title": "Problem 51",
+    "difficulty": "medium",
+    "description": "This is problem 51. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 51
+        },
+        "expected_output": 51
+      },
+      {
+        "input": {
+          "n": 52
+        },
+        "expected_output": 52
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p52",
+    "title": "Problem 52",
+    "difficulty": "medium",
+    "description": "This is problem 52. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 52
+        },
+        "expected_output": 52
+      },
+      {
+        "input": {
+          "n": 53
+        },
+        "expected_output": 53
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p53",
+    "title": "Problem 53",
+    "difficulty": "medium",
+    "description": "This is problem 53. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 53
+        },
+        "expected_output": 53
+      },
+      {
+        "input": {
+          "n": 54
+        },
+        "expected_output": 54
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p54",
+    "title": "Problem 54",
+    "difficulty": "medium",
+    "description": "This is problem 54. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 54
+        },
+        "expected_output": 54
+      },
+      {
+        "input": {
+          "n": 55
+        },
+        "expected_output": 55
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p55",
+    "title": "Problem 55",
+    "difficulty": "medium",
+    "description": "This is problem 55. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 55
+        },
+        "expected_output": 55
+      },
+      {
+        "input": {
+          "n": 56
+        },
+        "expected_output": 56
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p56",
+    "title": "Problem 56",
+    "difficulty": "medium",
+    "description": "This is problem 56. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 56
+        },
+        "expected_output": 56
+      },
+      {
+        "input": {
+          "n": 57
+        },
+        "expected_output": 57
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p57",
+    "title": "Problem 57",
+    "difficulty": "medium",
+    "description": "This is problem 57. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 57
+        },
+        "expected_output": 57
+      },
+      {
+        "input": {
+          "n": 58
+        },
+        "expected_output": 58
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p58",
+    "title": "Problem 58",
+    "difficulty": "medium",
+    "description": "This is problem 58. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 58
+        },
+        "expected_output": 58
+      },
+      {
+        "input": {
+          "n": 59
+        },
+        "expected_output": 59
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p59",
+    "title": "Problem 59",
+    "difficulty": "medium",
+    "description": "This is problem 59. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 59
+        },
+        "expected_output": 59
+      },
+      {
+        "input": {
+          "n": 60
+        },
+        "expected_output": 60
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p60",
+    "title": "Problem 60",
+    "difficulty": "medium",
+    "description": "This is problem 60. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 60
+        },
+        "expected_output": 60
+      },
+      {
+        "input": {
+          "n": 61
+        },
+        "expected_output": 61
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p61",
+    "title": "Problem 61",
+    "difficulty": "medium",
+    "description": "This is problem 61. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 61
+        },
+        "expected_output": 61
+      },
+      {
+        "input": {
+          "n": 62
+        },
+        "expected_output": 62
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p62",
+    "title": "Problem 62",
+    "difficulty": "medium",
+    "description": "This is problem 62. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 62
+        },
+        "expected_output": 62
+      },
+      {
+        "input": {
+          "n": 63
+        },
+        "expected_output": 63
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p63",
+    "title": "Problem 63",
+    "difficulty": "medium",
+    "description": "This is problem 63. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 63
+        },
+        "expected_output": 63
+      },
+      {
+        "input": {
+          "n": 64
+        },
+        "expected_output": 64
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p64",
+    "title": "Problem 64",
+    "difficulty": "medium",
+    "description": "This is problem 64. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 64
+        },
+        "expected_output": 64
+      },
+      {
+        "input": {
+          "n": 65
+        },
+        "expected_output": 65
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p65",
+    "title": "Problem 65",
+    "difficulty": "medium",
+    "description": "This is problem 65. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 65
+        },
+        "expected_output": 65
+      },
+      {
+        "input": {
+          "n": 66
+        },
+        "expected_output": 66
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p66",
+    "title": "Problem 66",
+    "difficulty": "medium",
+    "description": "This is problem 66. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 66
+        },
+        "expected_output": 66
+      },
+      {
+        "input": {
+          "n": 67
+        },
+        "expected_output": 67
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p67",
+    "title": "Problem 67",
+    "difficulty": "medium",
+    "description": "This is problem 67. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 67
+        },
+        "expected_output": 67
+      },
+      {
+        "input": {
+          "n": 68
+        },
+        "expected_output": 68
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p68",
+    "title": "Problem 68",
+    "difficulty": "medium",
+    "description": "This is problem 68. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 68
+        },
+        "expected_output": 68
+      },
+      {
+        "input": {
+          "n": 69
+        },
+        "expected_output": 69
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p69",
+    "title": "Problem 69",
+    "difficulty": "medium",
+    "description": "This is problem 69. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 69
+        },
+        "expected_output": 69
+      },
+      {
+        "input": {
+          "n": 70
+        },
+        "expected_output": 70
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p70",
+    "title": "Problem 70",
+    "difficulty": "medium",
+    "description": "This is problem 70. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 70
+        },
+        "expected_output": 70
+      },
+      {
+        "input": {
+          "n": 71
+        },
+        "expected_output": 71
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p71",
+    "title": "Problem 71",
+    "difficulty": "hard",
+    "description": "This is problem 71. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 71
+        },
+        "expected_output": 71
+      },
+      {
+        "input": {
+          "n": 72
+        },
+        "expected_output": 72
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p72",
+    "title": "Problem 72",
+    "difficulty": "hard",
+    "description": "This is problem 72. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 72
+        },
+        "expected_output": 72
+      },
+      {
+        "input": {
+          "n": 73
+        },
+        "expected_output": 73
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p73",
+    "title": "Problem 73",
+    "difficulty": "hard",
+    "description": "This is problem 73. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 73
+        },
+        "expected_output": 73
+      },
+      {
+        "input": {
+          "n": 74
+        },
+        "expected_output": 74
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p74",
+    "title": "Problem 74",
+    "difficulty": "hard",
+    "description": "This is problem 74. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 74
+        },
+        "expected_output": 74
+      },
+      {
+        "input": {
+          "n": 75
+        },
+        "expected_output": 75
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p75",
+    "title": "Problem 75",
+    "difficulty": "hard",
+    "description": "This is problem 75. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 75
+        },
+        "expected_output": 75
+      },
+      {
+        "input": {
+          "n": 76
+        },
+        "expected_output": 76
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p76",
+    "title": "Problem 76",
+    "difficulty": "hard",
+    "description": "This is problem 76. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 76
+        },
+        "expected_output": 76
+      },
+      {
+        "input": {
+          "n": 77
+        },
+        "expected_output": 77
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p77",
+    "title": "Problem 77",
+    "difficulty": "hard",
+    "description": "This is problem 77. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 77
+        },
+        "expected_output": 77
+      },
+      {
+        "input": {
+          "n": 78
+        },
+        "expected_output": 78
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p78",
+    "title": "Problem 78",
+    "difficulty": "hard",
+    "description": "This is problem 78. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 78
+        },
+        "expected_output": 78
+      },
+      {
+        "input": {
+          "n": 79
+        },
+        "expected_output": 79
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p79",
+    "title": "Problem 79",
+    "difficulty": "hard",
+    "description": "This is problem 79. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 79
+        },
+        "expected_output": 79
+      },
+      {
+        "input": {
+          "n": 80
+        },
+        "expected_output": 80
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p80",
+    "title": "Problem 80",
+    "difficulty": "hard",
+    "description": "This is problem 80. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 80
+        },
+        "expected_output": 80
+      },
+      {
+        "input": {
+          "n": 81
+        },
+        "expected_output": 81
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p81",
+    "title": "Problem 81",
+    "difficulty": "hard",
+    "description": "This is problem 81. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 81
+        },
+        "expected_output": 81
+      },
+      {
+        "input": {
+          "n": 82
+        },
+        "expected_output": 82
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p82",
+    "title": "Problem 82",
+    "difficulty": "hard",
+    "description": "This is problem 82. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 82
+        },
+        "expected_output": 82
+      },
+      {
+        "input": {
+          "n": 83
+        },
+        "expected_output": 83
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p83",
+    "title": "Problem 83",
+    "difficulty": "hard",
+    "description": "This is problem 83. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 83
+        },
+        "expected_output": 83
+      },
+      {
+        "input": {
+          "n": 84
+        },
+        "expected_output": 84
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p84",
+    "title": "Problem 84",
+    "difficulty": "hard",
+    "description": "This is problem 84. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 84
+        },
+        "expected_output": 84
+      },
+      {
+        "input": {
+          "n": 85
+        },
+        "expected_output": 85
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p85",
+    "title": "Problem 85",
+    "difficulty": "hard",
+    "description": "This is problem 85. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 85
+        },
+        "expected_output": 85
+      },
+      {
+        "input": {
+          "n": 86
+        },
+        "expected_output": 86
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p86",
+    "title": "Problem 86",
+    "difficulty": "hard",
+    "description": "This is problem 86. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 86
+        },
+        "expected_output": 86
+      },
+      {
+        "input": {
+          "n": 87
+        },
+        "expected_output": 87
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p87",
+    "title": "Problem 87",
+    "difficulty": "hard",
+    "description": "This is problem 87. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 87
+        },
+        "expected_output": 87
+      },
+      {
+        "input": {
+          "n": 88
+        },
+        "expected_output": 88
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p88",
+    "title": "Problem 88",
+    "difficulty": "hard",
+    "description": "This is problem 88. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 88
+        },
+        "expected_output": 88
+      },
+      {
+        "input": {
+          "n": 89
+        },
+        "expected_output": 89
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p89",
+    "title": "Problem 89",
+    "difficulty": "hard",
+    "description": "This is problem 89. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 89
+        },
+        "expected_output": 89
+      },
+      {
+        "input": {
+          "n": 90
+        },
+        "expected_output": 90
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p90",
+    "title": "Problem 90",
+    "difficulty": "hard",
+    "description": "This is problem 90. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 90
+        },
+        "expected_output": 90
+      },
+      {
+        "input": {
+          "n": 91
+        },
+        "expected_output": 91
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p91",
+    "title": "Problem 91",
+    "difficulty": "hard",
+    "description": "This is problem 91. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 91
+        },
+        "expected_output": 91
+      },
+      {
+        "input": {
+          "n": 92
+        },
+        "expected_output": 92
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p92",
+    "title": "Problem 92",
+    "difficulty": "hard",
+    "description": "This is problem 92. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 92
+        },
+        "expected_output": 92
+      },
+      {
+        "input": {
+          "n": 93
+        },
+        "expected_output": 93
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p93",
+    "title": "Problem 93",
+    "difficulty": "hard",
+    "description": "This is problem 93. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 93
+        },
+        "expected_output": 93
+      },
+      {
+        "input": {
+          "n": 94
+        },
+        "expected_output": 94
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p94",
+    "title": "Problem 94",
+    "difficulty": "hard",
+    "description": "This is problem 94. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 94
+        },
+        "expected_output": 94
+      },
+      {
+        "input": {
+          "n": 95
+        },
+        "expected_output": 95
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p95",
+    "title": "Problem 95",
+    "difficulty": "hard",
+    "description": "This is problem 95. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 95
+        },
+        "expected_output": 95
+      },
+      {
+        "input": {
+          "n": 96
+        },
+        "expected_output": 96
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p96",
+    "title": "Problem 96",
+    "difficulty": "hard",
+    "description": "This is problem 96. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 96
+        },
+        "expected_output": 96
+      },
+      {
+        "input": {
+          "n": 97
+        },
+        "expected_output": 97
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p97",
+    "title": "Problem 97",
+    "difficulty": "hard",
+    "description": "This is problem 97. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 97
+        },
+        "expected_output": 97
+      },
+      {
+        "input": {
+          "n": 98
+        },
+        "expected_output": 98
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p98",
+    "title": "Problem 98",
+    "difficulty": "hard",
+    "description": "This is problem 98. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 98
+        },
+        "expected_output": 98
+      },
+      {
+        "input": {
+          "n": 99
+        },
+        "expected_output": 99
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p99",
+    "title": "Problem 99",
+    "difficulty": "hard",
+    "description": "This is problem 99. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 99
+        },
+        "expected_output": 99
+      },
+      {
+        "input": {
+          "n": 100
+        },
+        "expected_output": 100
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  },
+  {
+    "id": "p100",
+    "title": "Problem 100",
+    "difficulty": "hard",
+    "description": "This is problem 100. Solve the task based on given input.",
+    "constraints": "1 <= n <= 10^5",
+    "starter_code": {
+      "python": "def solve(input_data):\n    pass"
+    },
+    "test_cases": [
+      {
+        "input": {
+          "n": 100
+        },
+        "expected_output": 100
+      },
+      {
+        "input": {
+          "n": 101
+        },
+        "expected_output": 101
+      }
+    ],
+    "expected_approach": "varies",
+    "expected_complexity": {
+      "time": "O(n)",
+      "space": "O(1)"
+    },
+    "tags": [
+      "array"
+    ]
+  }
+]
