@@ -9,6 +9,7 @@ except ImportError:
 
 from env import OpenEnv
 from grader import EvaluationGrader
+from tasks import get_tasks
 
 
 # Required environment variables for submission checks.
@@ -72,6 +73,17 @@ def run_inference():
 
     env = OpenEnv()
     grader = EvaluationGrader()
+    tasks = get_tasks()
+
+    graded_tasks = [t for t in tasks if getattr(t, "grader", None)]
+    if len(graded_tasks) < 3:
+        raise RuntimeError("At least 3 tasks with graders are required")
+
+    # Keep deterministic 3-task evaluation for easy/medium/hard.
+    selected_by_difficulty = {}
+    for t in graded_tasks:
+        if t.difficulty not in selected_by_difficulty:
+            selected_by_difficulty[t.difficulty] = t
 
     actions = [
         "run_tests",
@@ -86,8 +98,11 @@ def run_inference():
 
     scores = []
 
-    # Execute exactly 3 tasks as per Requirement 1.5
+    # Execute exactly 3 graded tasks as per Requirement 1.5.
     for difficulty in ["easy", "medium", "hard"]:
+        if difficulty not in selected_by_difficulty:
+            raise RuntimeError(f"Missing graded task for difficulty: {difficulty}")
+
         env.reset(difficulty=difficulty)
 
         for action in actions:
