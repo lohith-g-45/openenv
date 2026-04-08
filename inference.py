@@ -120,6 +120,8 @@ def run_inference():
         task_obj = selected_by_difficulty[difficulty]
         raw_score = task_obj.grader(env_state) if callable(getattr(task_obj, "grader", None)) else grader.evaluate(env_state)
         task_score = _normalized_task_score(raw_score, difficulty, env_state)
+        if not (0.0 < task_score < 1.0):
+            raise RuntimeError(f"Score out of range for {difficulty}: {task_score}")
         scores.append(task_score)
         print(f"[STEP] score_{difficulty}={task_score:.3f}")
 

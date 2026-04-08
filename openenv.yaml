@@ -29,6 +29,26 @@ openenv:
         type: object
         additionalProperties:
           type: string
+
+tasks:
+  - id: easy-1
+    difficulty: easy
+    grader: EvaluationGrader
+  - id: medium-1
+    difficulty: medium
+    grader: EvaluationGrader
+  - id: hard-1
+    difficulty: hard
+    grader: EvaluationGrader
+
+graders:
+  EvaluationGrader:
+    module: grader
+    class: EvaluationGrader
+
+scoring:
+  min_exclusive: 0.0
+  max_exclusive: 1.0
       error_type:
         type: string
       analysis:
