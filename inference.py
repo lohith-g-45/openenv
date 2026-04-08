@@ -27,6 +27,8 @@ DIFFICULTY_FACTORS = {
     "hard": 0.90,
 }
 
+EPS = 1e-3
+
 
 def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> float:
     """
@@ -41,8 +43,8 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
     difficulty_factor = DIFFICULTY_FACTORS.get(difficulty, 0.92)
     combined = raw_score * (0.7 + 0.3 * coverage) * difficulty_factor
 
-    # Keep strict bound to avoid exact 1.0 values.
-    return max(0.0, min(0.999, round(combined, 3)))
+    # Keep strict bounds to avoid exact 0.0/1.0 values.
+    return max(EPS, min(1.0 - EPS, round(combined, 3)))
 
 
 def _probe_litellm_proxy() -> None:
@@ -115,7 +117,8 @@ def run_inference():
 
         # Final deterministic score for this task.
         env_state = env.state()["state"]
-        raw_score = grader.evaluate(env_state)
+        task_obj = selected_by_difficulty[difficulty]
+        raw_score = task_obj.grader(env_state) if callable(getattr(task_obj, "grader", None)) else grader.evaluate(env_state)
         task_score = _normalized_task_score(raw_score, difficulty, env_state)
         scores.append(task_score)
         print(f"[STEP] score_{difficulty}={task_score:.3f}")
