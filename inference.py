@@ -118,12 +118,7 @@ def run_inference():
         # Final deterministic score for this task.
         env_state = env.state()["state"]
         task_obj = selected_by_difficulty[difficulty]
-        if callable(getattr(task_obj, "grader", None)):
-            raw_score = task_obj.grader(env_state)
-        elif callable(getattr(task_obj, "grader_fn", None)):
-            raw_score = task_obj.grader_fn(env_state)
-        else:
-            raw_score = grader.evaluate(env_state)
+        raw_score = task_obj.grader(env_state) if callable(getattr(task_obj, "grader", None)) else grader.evaluate(env_state)
         task_score = _normalized_task_score(raw_score, difficulty, env_state)
         if not (0.0 < task_score < 1.0):
             raise RuntimeError(f"Score out of range for {difficulty}: {task_score}")
