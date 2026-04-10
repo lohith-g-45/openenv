@@ -20,21 +20,21 @@ class EvaluationGrader:
 
         # --- Bug Detection/Correction (0.3) ---
         # If we have an error_type or fixed code, we award points
-        bug_score = 0.0
+        bug_score = 0.2
         if state.get("error_type") and state.get("error_type") != "unknown":
-            bug_score = 1.0
+            bug_score = 0.8
         
         # --- Explanation / Analysis (0.3) ---
         analysis = state.get("analysis", {})
-        explanation_score = 0.0
+        explanation_score = 0.2
         if analysis and len(analysis) > 3: # Check if analysis contains meaningful data
-            explanation_score = 1.0
+            explanation_score = 0.8
         
         # --- Optimization (0.4) ---
-        optimization_score = 0.0
+        optimization_score = 0.2
         # If the code was modified (fixed/optimized), award points
         if state.get("code") and len(state.get("code", "")) > 10:
-            optimization_score = 1.0
+            optimization_score = 0.8
 
         # Weighted sum: 0.3 + 0.3 + 0.4 = 1.0
         score = (
