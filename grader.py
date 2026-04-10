@@ -8,6 +8,10 @@ class EvaluationGrader:
 
     _EPS = 1e-6
 
+    def __call__(self, state: dict, task: dict | None = None) -> float:
+        """Allow validator/tooling that expects callable graders."""
+        return self.evaluate(state, task)
+
     def evaluate(self, state: dict, task: dict | None = None) -> float:
         """
         Returns a final score in range [0.0, 1.0]
