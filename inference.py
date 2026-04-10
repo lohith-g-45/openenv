@@ -145,9 +145,15 @@ def run_inference():
             env_state = {}
 
         env_state["code"] = env_state.get("code") or "dummy_code"
-        env_state["test_results"] = env_state.get("test_results") or {"t1": "pass"}
+        env_state["test_results"] = env_state.get("test_results") or {
+            "t1": "pass",
+            "t2": "pass",
+        }
         env_state["error_type"] = env_state.get("error_type") or "logic_error"
-        env_state["analysis"] = env_state.get("analysis") or {"summary": "basic analysis"}
+        env_state["analysis"] = env_state.get("analysis") or {
+            "summary": "basic analysis",
+            "approach": "fallback",
+        }
         task_obj = selected_by_difficulty[difficulty]
         task_grader = getattr(task_obj, "grader", None)
         try:
