@@ -6,7 +6,7 @@ class EvaluationGrader:
     Satisfies META Round 1 requirement 3.3 for partial scoring.
     """
 
-    _EPS = 1e-3
+    _EPS = 1e-6
 
     def evaluate(self, state: dict, task: dict | None = None) -> float:
         """
@@ -43,8 +43,12 @@ class EvaluationGrader:
             0.4 * optimization_score
         )
 
-        # Ensure range [0.0, 1.0] as per requirement 1.6
-        return max(self._EPS, min(1.0 - self._EPS, score))
+        # Force strict open interval (0, 1) with explicit guards.
+        if score <= 0.0:
+            return self._EPS
+        if score >= 1.0:
+            return 1.0 - self._EPS
+        return float(score)
 
 
 if __name__ == "__main__":

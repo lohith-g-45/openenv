@@ -27,7 +27,7 @@ DIFFICULTY_FACTORS = {
     "hard": 0.90,
 }
 
-EPS = 1e-3
+EPS = 1e-6
 
 
 def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> float:
@@ -43,8 +43,12 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
     difficulty_factor = DIFFICULTY_FACTORS.get(difficulty, 0.92)
     combined = raw_score * (0.7 + 0.3 * coverage) * difficulty_factor
 
-    # Keep strict bounds to avoid exact 0.0/1.0 values.
-    return max(EPS, min(1.0 - EPS, round(combined, 3)))
+    # Keep strict open bounds to avoid exact 0.0/1.0 values.
+    if combined <= 0.0:
+        return EPS
+    if combined >= 1.0:
+        return 1.0 - EPS
+    return float(combined)
 
 
 def _probe_litellm_proxy() -> None:

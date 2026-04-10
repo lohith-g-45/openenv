@@ -8,7 +8,7 @@ def default_task_grader(state: Dict[str, Any]) -> float:
     Kept self-contained so validation environments with different import
     semantics still evaluate grader scores deterministically.
     """
-    eps = 1e-3
+    eps = 1e-6
     if not isinstance(state, dict):
         return 0.5
 
@@ -24,8 +24,12 @@ def default_task_grader(state: Dict[str, Any]) -> float:
     code = state.get("code", "")
     code_score = 1.0 if isinstance(code, str) and len(code.strip()) > 0 else 0.0
 
-    score = 0.3 * bug_score + 0.3 * analysis_score + 0.4 * code_score
-    return max(eps, min(1.0 - eps, float(score)))
+    score = float(0.3 * bug_score + 0.3 * analysis_score + 0.4 * code_score)
+    if score <= 0.0:
+        return eps
+    if score >= 1.0:
+        return 1.0 - eps
+    return score
 
 
 @dataclass(frozen=True)
