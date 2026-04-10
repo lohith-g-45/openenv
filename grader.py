@@ -23,21 +23,21 @@ class EvaluationGrader:
 
         # --- Bug Detection/Correction (0.3) ---
         # If we have an error_type or fixed code, we award points
-        bug_score = 0.5
+        bug_score = 0.3
         if state.get("error_type") and state.get("error_type") != "unknown":
-            bug_score = 0.9
+            bug_score = 0.7
         
         # --- Explanation / Analysis (0.3) ---
         analysis = state.get("analysis") or {}
-        explanation_score = 0.5
+        explanation_score = 0.3
         if isinstance(analysis, dict) and len(analysis) >= 2: # Check if analysis contains meaningful data
-            explanation_score = 0.9
+            explanation_score = 0.7
         
         # --- Optimization (0.4) ---
-        optimization_score = 0.5
+        optimization_score = 0.3
         # If the code was modified (fixed/optimized), award points
         if state.get("code") and len(state.get("code", "")) > 5:
-            optimization_score = 0.9
+            optimization_score = 0.7
 
         # Weighted sum: 0.3 + 0.3 + 0.4 = 1.0
         score = (
@@ -46,8 +46,16 @@ class EvaluationGrader:
             0.4 * optimization_score
         )
 
-        # Force strict open interval (0, 1).
-        return max(self._EPS, min(float(score), 1.0 - self._EPS))
+        # Force strict open interval (0, 1) with precision-safe clamp.
+        eps = self._EPS
+        score = float(score) if isinstance(score, (int, float)) else 0.5
+        score = max(eps, score)
+        score = min(1.0 - eps, score)
+        if score <= 0.0:
+            score = eps
+        if score >= 1.0:
+            score = 1.0 - eps
+        return float(f"{score:.6f}")
 
 
 if __name__ == "__main__":
