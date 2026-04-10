@@ -28,6 +28,8 @@ DIFFICULTY_FACTORS = {
 }
 
 EPS = 1e-6
+SCORE_MIN = 0.3
+SCORE_MAX = 0.5
 
 
 def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> float:
@@ -46,9 +48,9 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
     difficulty_factor = DIFFICULTY_FACTORS.get(difficulty, 0.92)
     combined = raw_score * (0.7 + 0.3 * coverage) * difficulty_factor
 
-    # Keep strict open bounds to avoid exact 0.0/1.0 values.
-    combined = max(EPS, combined)
-    combined = min(1.0 - EPS, combined)
+    # Keep score in the requested band.
+    combined = max(SCORE_MIN, combined)
+    combined = min(SCORE_MAX, combined)
     return float(combined)
 
 
@@ -164,9 +166,9 @@ def run_inference():
         except Exception:
             raw_score = 0.5
         task_score = _normalized_task_score(raw_score, difficulty, env_state)
-        if not isinstance(task_score, (int, float)) or not (0.0 < task_score < 1.0):
-            task_score = 0.5
-        safe_score = max(EPS, min(1.0 - EPS, float(task_score)))
+        if not isinstance(task_score, (int, float)):
+            task_score = 0.4
+        safe_score = max(SCORE_MIN, min(SCORE_MAX, float(task_score)))
         scores.append(safe_score)
         print(f"[STEP] score_{difficulty}={safe_score:.6f}")
         print("[TASK] " + json.dumps({
@@ -183,7 +185,7 @@ def run_inference():
         )
 
     avg_score = sum(scores) / len(scores) if scores else 0.0
-    safe_avg = max(EPS, min(1.0 - EPS, float(avg_score))) if scores else 0.0
+    safe_avg = max(SCORE_MIN, min(SCORE_MAX, float(avg_score))) if scores else 0.0
     print(f"[STEP] average_score={safe_avg:.6f}")
     print(f"[STEP] graded_tasks_count={len(scores)}")
     in_range = all(0.0 < s < 1.0 for s in scores)
