@@ -104,6 +104,7 @@ def run_inference():
     ]
 
     print("[START]")
+    print("[STEP] task_validation_begin")
 
     scores = []
 
@@ -147,9 +148,23 @@ def run_inference():
             "grader": getattr(task_obj, "grader_name", "EvaluationGrader"),
             "score": round(float(task_score), 3),
         }, sort_keys=True))
+        print(
+            "TASK "
+            f"{getattr(task_obj, 'id', f'{difficulty}-fallback')} "
+            f"GRADER {getattr(task_obj, 'grader_name', 'EvaluationGrader')} "
+            f"SCORE {task_score:.3f}"
+        )
 
     avg_score = sum(scores) / len(scores) if scores else 0.0
     print(f"[STEP] average_score={avg_score:.3f}")
+    print(f"[STEP] graded_tasks_count={len(scores)}")
+    in_range = all(0.0 < s < 1.0 for s in scores)
+    print(f"[STEP] all_task_scores_in_range={str(in_range).lower()}")
+    print(
+        "TASK_VALIDATION_SUMMARY "
+        f"graded_tasks={len(scores)} "
+        f"all_scores_in_range={str(in_range).lower()}"
+    )
 
     print("[END]")
 
