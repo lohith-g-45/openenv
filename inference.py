@@ -81,7 +81,10 @@ def run_inference():
     grader = EvaluationGrader()
     tasks = get_tasks() or []
 
-    graded_tasks = [t for t in tasks if callable(getattr(t, "grader", None))]
+    graded_tasks = [
+        t for t in tasks
+        if callable(getattr(t, "grader", None)) or hasattr(getattr(t, "grader", None), "evaluate")
+    ]
 
     # Keep deterministic 3-task evaluation for easy/medium/hard.
     selected_by_difficulty = {}
@@ -95,7 +98,8 @@ def run_inference():
             selected_by_difficulty[difficulty] = SimpleNamespace(
                 id=f"{difficulty}-fallback",
                 difficulty=difficulty,
-                grader=lambda state, _g=grader: _g.evaluate(state),
+                grader=EvaluationGrader(),
+                grader_name="EvaluationGrader",
             )
 
     actions = [
@@ -137,8 +141,14 @@ def run_inference():
         except Exception:
             env_state = {}
         task_obj = selected_by_difficulty[difficulty]
+        task_grader = getattr(task_obj, "grader", None)
         try:
-            raw_score = task_obj.grader(env_state) if callable(getattr(task_obj, "grader", None)) else grader.evaluate(env_state)
+            if callable(task_grader):
+                raw_score = task_grader(env_state)
+            elif hasattr(task_grader, "evaluate"):
+                raw_score = task_grader.evaluate(env_state)
+            else:
+                raw_score = grader.evaluate(env_state)
         except Exception:
             raw_score = grader.evaluate(env_state)
         task_score = _normalized_task_score(raw_score, difficulty, env_state)

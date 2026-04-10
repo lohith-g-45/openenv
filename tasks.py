@@ -1,35 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List
+from typing import Any, Dict, List
 
-
-def default_task_grader(state: Dict[str, Any]) -> float:
-    """Per-task callable grader used by inference and validator checks.
-
-    Kept self-contained so validation environments with different import
-    semantics still evaluate grader scores deterministically.
-    """
-    eps = 1e-6
-    if not isinstance(state, dict):
-        return 0.5
-
-    # 0.3: bug detection signal
-    err = str(state.get("error_type", "")).strip().lower()
-    bug_score = 1.0 if err and err not in {"none", "unknown", ""} else 0.0
-
-    # 0.3: analysis signal
-    analysis = state.get("analysis", {})
-    analysis_score = 1.0 if isinstance(analysis, dict) and len(analysis) > 0 else 0.0
-
-    # 0.4: code signal
-    code = state.get("code", "")
-    code_score = 1.0 if isinstance(code, str) and len(code.strip()) > 0 else 0.0
-
-    score = float(0.3 * bug_score + 0.3 * analysis_score + 0.4 * code_score)
-    if score <= 0.0:
-        return eps
-    if score >= 1.0:
-        return 1.0 - eps
-    return score
+from grader import EvaluationGrader
 
 
 @dataclass(frozen=True)
@@ -41,7 +13,7 @@ class Task:
     test_cases: List[Dict[str, str]]
     expected_outputs: Dict[str, str]
     expected_approach: str
-    grader: Callable[[Dict[str, Any]], float] = default_task_grader
+    grader: Any = field(default_factory=EvaluationGrader)
     grader_name: str = "EvaluationGrader"
     hidden_test_cases: List[Dict[str, str]] = field(default_factory=list)
     starter_code: Dict[str, str] = field(default_factory=dict)
@@ -71,7 +43,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "[0, 1]", "t2": "[1, 2]", "t3": "[0, 1]", "t4": "[1, 2]"},
         expected_approach="hash-map-lookup",
-        grader=default_task_grader,
+        grader=EvaluationGrader(),
         grader_name="EvaluationGrader",
         starter_code={
             "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
@@ -117,7 +89,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "3", "t2": "1", "t3": "3", "t4": "0"},
         expected_approach="sliding-window",
-        grader=default_task_grader,
+        grader=EvaluationGrader(),
         grader_name="EvaluationGrader",
         starter_code={
             "python": "def length_of_longest_substring(s):\n    # Write your solution here\n    pass\n",
@@ -162,7 +134,7 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "6", "t2": "9", "t3": "1", "t4": "7"},
         expected_approach="two-pointers",
-        grader=default_task_grader,
+        grader=EvaluationGrader(),
         grader_name="EvaluationGrader",
         starter_code={
             "python": "def trap(height):\n    # Write your solution here\n    pass\n",
