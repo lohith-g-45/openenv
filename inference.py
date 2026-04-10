@@ -44,10 +44,8 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
     combined = raw_score * (0.7 + 0.3 * coverage) * difficulty_factor
 
     # Keep strict open bounds to avoid exact 0.0/1.0 values.
-    if combined <= 0.0:
-        return EPS
-    if combined >= 1.0:
-        return 1.0 - EPS
+    combined = max(EPS, combined)
+    combined = min(1.0 - EPS, combined)
     return float(combined)
 
 
@@ -140,13 +138,17 @@ def run_inference():
             env_state = env.state().get("state", {})
         except Exception:
             env_state = {}
+        env_state.setdefault("code", "")
+        env_state.setdefault("test_results", {})
+        env_state.setdefault("error_type", "unknown")
+        env_state.setdefault("analysis", {})
         task_obj = selected_by_difficulty[difficulty]
         task_grader = getattr(task_obj, "grader", None)
         try:
-            if callable(task_grader):
-                raw_score = task_grader(env_state)
-            elif hasattr(task_grader, "evaluate"):
+            if hasattr(task_grader, "evaluate"):
                 raw_score = task_grader.evaluate(env_state)
+            elif callable(task_grader):
+                raw_score = task_grader(env_state)
             else:
                 raw_score = grader.evaluate(env_state)
         except Exception:
