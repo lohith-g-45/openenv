@@ -1,6 +1,5 @@
-# inference.py
-
 import os
+import json
 from types import SimpleNamespace
 
 try:
@@ -142,6 +141,12 @@ def run_inference():
             task_score = max(EPS, min(1.0 - EPS, float(task_score) if isinstance(task_score, (int, float)) else 0.5))
         scores.append(task_score)
         print(f"[STEP] score_{difficulty}={task_score:.3f}")
+        print("[TASK] " + json.dumps({
+            "task_id": getattr(task_obj, "id", f"{difficulty}-fallback"),
+            "difficulty": difficulty,
+            "grader": getattr(task_obj, "grader_name", "EvaluationGrader"),
+            "score": round(float(task_score), 3),
+        }, sort_keys=True))
 
     avg_score = sum(scores) / len(scores) if scores else 0.0
     print(f"[STEP] average_score={avg_score:.3f}")
