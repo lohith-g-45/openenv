@@ -160,23 +160,25 @@ def run_inference():
         task_score = _normalized_task_score(raw_score, difficulty, env_state)
         if not isinstance(task_score, (int, float)) or not (0.0 < task_score < 1.0):
             task_score = 0.5
-        scores.append(task_score)
-        print(f"[STEP] score_{difficulty}={task_score:.3f}")
+        safe_score = max(EPS, min(1.0 - EPS, float(task_score)))
+        scores.append(safe_score)
+        print(f"[STEP] score_{difficulty}={safe_score:.6f}")
         print("[TASK] " + json.dumps({
             "task_id": getattr(task_obj, "id", f"{difficulty}-fallback"),
             "difficulty": difficulty,
             "grader": getattr(task_obj, "grader_name", "EvaluationGrader"),
-            "score": round(float(task_score), 3),
+            "score": float(f"{safe_score:.6f}"),
         }, sort_keys=True))
         print(
             "TASK "
             f"{getattr(task_obj, 'id', f'{difficulty}-fallback')} "
             f"GRADER {getattr(task_obj, 'grader_name', 'EvaluationGrader')} "
-            f"SCORE {task_score:.3f}"
+            f"SCORE {safe_score:.6f}"
         )
 
     avg_score = sum(scores) / len(scores) if scores else 0.0
-    print(f"[STEP] average_score={avg_score:.3f}")
+    safe_avg = max(EPS, min(1.0 - EPS, float(avg_score))) if scores else 0.0
+    print(f"[STEP] average_score={safe_avg:.6f}")
     print(f"[STEP] graded_tasks_count={len(scores)}")
     in_range = all(0.0 < s < 1.0 for s in scores)
     print(f"[STEP] all_task_scores_in_range={str(in_range).lower()}")
