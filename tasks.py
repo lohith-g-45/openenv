@@ -155,6 +155,88 @@ TASKS: List[Task] = [
             ),
         },
     ),
+    Task(
+        id="easy-2",
+        difficulty="easy",
+        problem="Two Sum Variant: Return any valid pair of indices for target sum.",
+        code="def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
+        test_cases=[
+            {"name": "t1", "input": "two_sum([1, 2, 3, 4], 5)", "expected": "[0, 3]"},
+            {"name": "t2", "input": "two_sum([10, -2, 8, 1], 9)", "expected": "[2, 3]"},
+            {"name": "t3", "input": "two_sum([0, 4, 3, 0], 0)", "expected": "[0, 3]"},
+            {"name": "t4", "input": "two_sum([5, 5, 5, 5], 10)", "expected": "[0, 1]"},
+        ],
+        hidden_test_cases=[
+            {"name": "h1", "input": "two_sum([1, 2, 3, 4], 5)", "expected": "[0, 3]"},
+            {"name": "h2", "input": "two_sum([10, -2, 8, 1], 9)", "expected": "[2, 3]"},
+            {"name": "h3", "input": "two_sum([0, 4, 3, 0], 0)", "expected": "[0, 3]"},
+            {"name": "h4", "input": "two_sum([5, 5, 5, 5], 10)", "expected": "[0, 1]"},
+        ],
+        expected_outputs={"t1": "[0, 3]", "t2": "[2, 3]", "t3": "[0, 3]", "t4": "[0, 1]"},
+        expected_approach="hash-map-lookup",
+        grader=EvaluationGrader(),
+        grader_name="EvaluationGrader",
+        starter_code={
+            "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
+            "c": (
+                "#include <stdlib.h>\n\n"
+                "int* two_sum(int* nums, int numsSize, int target, int* returnSize) {\n"
+                "    // Write your solution here\n"
+                "    *returnSize = 0;\n"
+                "    return NULL;\n"
+                "}\n"
+            ),
+            "java": (
+                "import java.util.*;\n\n"
+                "class Solution {\n"
+                "    public static int[] two_sum(int[] nums, int target) {\n"
+                "        // Write your solution here\n"
+                "        return new int[]{};\n"
+                "    }\n"
+                "}\n"
+            ),
+        },
+    ),
+    Task(
+        id="hard-2",
+        difficulty="hard",
+        problem="Trapping Rain Water Variant: Compute water trapped for edge-heavy arrays.",
+        code="def trap(height):\n    # Write your solution here\n    pass\n",
+        test_cases=[
+            {"name": "t1", "input": "trap([5,2,1,2,1,5])", "expected": "14"},
+            {"name": "t2", "input": "trap([4,1,1,0,2,3])", "expected": "8"},
+            {"name": "t3", "input": "trap([2,0,2])", "expected": "2"},
+            {"name": "t4", "input": "trap([3,1,2,1,2,1,5])", "expected": "8"},
+        ],
+        hidden_test_cases=[
+            {"name": "h1", "input": "trap([5,2,1,2,1,5])", "expected": "14"},
+            {"name": "h2", "input": "trap([4,1,1,0,2,3])", "expected": "8"},
+            {"name": "h3", "input": "trap([2,0,2])", "expected": "2"},
+            {"name": "h4", "input": "trap([3,1,2,1,2,1,5])", "expected": "8"},
+        ],
+        expected_outputs={"t1": "14", "t2": "8", "t3": "2", "t4": "8"},
+        expected_approach="two-pointers",
+        grader=EvaluationGrader(),
+        grader_name="EvaluationGrader",
+        starter_code={
+            "python": "def trap(height):\n    # Write your solution here\n    pass\n",
+            "c": (
+                "int trap(int* height, int heightSize) {\n"
+                "    // Write your solution here\n"
+                "    return 0;\n"
+                "}\n"
+            ),
+            "java": (
+                "import java.util.*;\n\n"
+                "class Solution {\n"
+                "    public static int trap(int[] height) {\n"
+                "        // Write your solution here\n"
+                "        return 0;\n"
+                "    }\n"
+                "}\n"
+            ),
+        },
+    ),
 ]
 
 
