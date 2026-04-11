@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-from grader import EvaluationGrader
+from server.graders import EasyGrader, MediumGrader, HardGrader
 
 
 @dataclass(frozen=True)
@@ -13,8 +13,8 @@ class Task:
     test_cases: List[Dict[str, str]]
     expected_outputs: Dict[str, str]
     expected_approach: str
-    grader: Any = field(default_factory=EvaluationGrader)
-    grader_name: str = "EvaluationGrader"
+    grader: Any = field(default_factory=EasyGrader)
+    grader_name: str = "EasyGrader"
     hidden_test_cases: List[Dict[str, str]] = field(default_factory=list)
     starter_code: Dict[str, str] = field(default_factory=dict)
 
@@ -43,8 +43,8 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "[0, 1]", "t2": "[1, 2]", "t3": "[0, 1]", "t4": "[1, 2]"},
         expected_approach="hash-map-lookup",
-        grader=EvaluationGrader(),
-        grader_name="EvaluationGrader",
+        grader=EasyGrader(),
+        grader_name="EasyGrader",
         starter_code={
             "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -89,8 +89,8 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "3", "t2": "1", "t3": "3", "t4": "0"},
         expected_approach="sliding-window",
-        grader=EvaluationGrader(),
-        grader_name="EvaluationGrader",
+        grader=MediumGrader(),
+        grader_name="MediumGrader",
         starter_code={
             "python": "def length_of_longest_substring(s):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -134,8 +134,8 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "6", "t2": "9", "t3": "1", "t4": "7"},
         expected_approach="two-pointers",
-        grader=EvaluationGrader(),
-        grader_name="EvaluationGrader",
+        grader=HardGrader(),
+        grader_name="HardGrader",
         starter_code={
             "python": "def trap(height):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -176,8 +176,8 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "[0, 3]", "t2": "[2, 3]", "t3": "[0, 3]", "t4": "[0, 1]", "t5": "[0, 1]"},
         expected_approach="hash-map-lookup",
-        grader=EvaluationGrader(),
-        grader_name="EvaluationGrader",
+        grader=EasyGrader(),
+        grader_name="EasyGrader",
         starter_code={
             "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
             "c": (
@@ -220,8 +220,8 @@ TASKS: List[Task] = [
         ],
         expected_outputs={"t1": "14", "t2": "8", "t3": "2", "t4": "8", "t5": "6"},
         expected_approach="two-pointers",
-        grader=EvaluationGrader(),
-        grader_name="EvaluationGrader",
+        grader=HardGrader(),
+        grader_name="HardGrader",
         starter_code={
             "python": "def trap(height):\n    # Write your solution here\n    pass\n",
             "c": (
