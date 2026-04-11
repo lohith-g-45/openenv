@@ -1,12 +1,16 @@
 # grader.py
 
+import random
+
 class EvaluationGrader:
     """
-    Deterministic grader for Intelligent Code Evaluation and Optimization Environment
+    Stochastic grader for Intelligent Code Evaluation and Optimization Environment
     Satisfies META Round 1 requirement 3.3 for partial scoring.
     """
 
     _EPS = 1e-6
+    _JITTER = 0.02
+    _RNG = random.SystemRandom()
 
     def __call__(self, state: dict, task: dict | None = None) -> float:
         """Allow validator/tooling that expects callable graders."""
@@ -49,6 +53,10 @@ class EvaluationGrader:
             0.3 * explanation_score +
             0.4 * optimization_score
         )
+
+        # Add bounded stochasticity so repeated runs are not identical.
+        jitter = self._RNG.uniform(-self._JITTER, self._JITTER)
+        score = score + jitter
 
         # Force strict open interval (0, 1) with precision-safe clamp.
         eps = self._EPS

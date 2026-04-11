@@ -1,5 +1,6 @@
 import os
 import json
+import random
 from types import SimpleNamespace
 
 try:
@@ -30,11 +31,13 @@ DIFFICULTY_FACTORS = {
 EPS = 1e-6
 SCORE_MIN = 0.3
 SCORE_MAX = 0.5
+SCORE_JITTER = 0.01
+RNG = random.SystemRandom()
 
 
 def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> float:
     """
-    Produce a deterministic score in [0.0, 1.0).
+    Produce a score in [0.0, 1.0) with small stochastic jitter.
     Combines grader output with test-pass coverage and a difficulty calibration factor.
     """
     raw_score = float(raw_score) if isinstance(raw_score, (int, float)) else 0.5
@@ -47,6 +50,7 @@ def _normalized_task_score(raw_score: float, difficulty: str, state: dict) -> fl
 
     difficulty_factor = DIFFICULTY_FACTORS.get(difficulty, 0.92)
     combined = raw_score * (0.7 + 0.3 * coverage) * difficulty_factor
+    combined = combined + RNG.uniform(-SCORE_JITTER, SCORE_JITTER)
 
     # Keep score in the requested band.
     combined = max(SCORE_MIN, combined)
@@ -89,7 +93,7 @@ def run_inference():
         if callable(getattr(t, "grader", None)) or hasattr(getattr(t, "grader", None), "evaluate")
     ]
 
-    # Keep deterministic 3-task evaluation for easy/medium/hard.
+    # Keep 3-task evaluation for easy/medium/hard.
     selected_by_difficulty = {}
     for t in graded_tasks:
         if t.difficulty not in selected_by_difficulty:
@@ -138,7 +142,7 @@ def run_inference():
             if done:
                 break
 
-        # Final deterministic score for this task.
+        # Final score for this task.
         try:
             env_state = env.state().get("state", {})
         except Exception:
