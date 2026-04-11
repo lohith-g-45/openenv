@@ -28,4 +28,23 @@ llm = [
 server = "server.app:main"
 
 [tool.setuptools]
-py-modules = ["api", "env", "models", "tasks", "validate_openenv"]
+include-package-data = true
+py-modules = [
+  "analysis",
+  "api",
+  "env",
+  "execution_engine",
+  "grader",
+  "inference",
+  "llm_manager",
+  "models",
+  "optimization_engine",
+  "pipeline",
+  "repair_engine",
+  "tasks",
+  "validate_openenv"
+]
+
+[tool.setuptools.packages.find]
+include = ["server*", "app*", "your*"]
+exclude = ["tests*", "code-evaluator*", "intelligent_code_eval_openenv.egg-info*"]
