@@ -9,5 +9,7 @@ COPY . .
 
 EXPOSE 7860
 
-CMD ["python", "-m", "server.app"]
+# Run inference.py first so the validator can read [TASK] scoring output,
+# then start the FastAPI server.
+CMD ["sh", "-c", "python inference.py && python -m server.app"]
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-# Import graders directly from grader.py
+# Import graders directly from grader.py (no server.graders package needed)
 from grader import EasyGrader, MediumGrader, HardGrader
 
 
@@ -48,23 +48,6 @@ TASKS: List[Task] = [
         grader_name="EasyGrader",
         starter_code={
             "python": "def two_sum(nums, target):\n    # Write your solution here\n    pass\n",
-            "c": (
-                "#include <stdlib.h>\n\n"
-                "int* two_sum(int* nums, int numsSize, int target, int* returnSize) {\n"
-                "    // Write your solution here\n"
-                "    *returnSize = 0;\n"
-                "    return NULL;\n"
-                "}\n"
-            ),
-            "java": (
-                "import java.util.*;\n\n"
-                "class Solution {\n"
-                "    public static int[] two_sum(int[] nums, int target) {\n"
-                "        // Write your solution here\n"
-                "        return new int[]{};\n"
-                "    }\n"
-                "}\n"
-            ),
         },
     ),
     Task(
@@ -225,21 +208,6 @@ TASKS: List[Task] = [
         grader_name="HardGrader",
         starter_code={
             "python": "def trap(height):\n    # Write your solution here\n    pass\n",
-            "c": (
-                "int trap(int* height, int heightSize) {\n"
-                "    // Write your solution here\n"
-                "    return 0;\n"
-                "}\n"
-            ),
-            "java": (
-                "import java.util.*;\n\n"
-                "class Solution {\n"
-                "    public static int trap(int[] height) {\n"
-                "        // Write your solution here\n"
-                "        return 0;\n"
-                "    }\n"
-                "}\n"
-            ),
         },
     ),
 ]
