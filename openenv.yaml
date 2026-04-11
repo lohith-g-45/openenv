@@ -8,13 +8,13 @@ openenv:
   tasks:
     - id: easy-1
       difficulty: easy
-      grader: EvaluationGrader
+      grader: server.graders:EasyGrader
     - id: medium-1
       difficulty: medium
-      grader: EvaluationGrader
+      grader: server.graders:MediumGrader
     - id: hard-1
       difficulty: hard
-      grader: EvaluationGrader
+      grader: server.graders:HardGrader
   state_schema:
     type: object
     required:
@@ -61,18 +61,24 @@ openenv:
 tasks:
   - id: easy-1
     difficulty: easy
-    grader: EvaluationGrader
+    grader: server.graders:EasyGrader
   - id: medium-1
     difficulty: medium
-    grader: EvaluationGrader
+    grader: server.graders:MediumGrader
   - id: hard-1
     difficulty: hard
-    grader: EvaluationGrader
+    grader: server.graders:HardGrader
 
 graders:
-  EvaluationGrader:
-    module: grader
-    class: EvaluationGrader
+  EasyGrader:
+    module: server.graders
+    class: EasyGrader
+  MediumGrader:
+    module: server.graders
+    class: MediumGrader
+  HardGrader:
+    module: server.graders
+    class: HardGrader
 
 scoring:
   min_exclusive: 0.0
