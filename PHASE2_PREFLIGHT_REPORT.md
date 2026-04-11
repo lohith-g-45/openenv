@@ -44,9 +44,9 @@ Result: PASS
 Observed output:
 ```text
 tasks_in_yaml= 3
-TASK=easy-1     GRADER=server.graders:EasyGrader           SCORE=0.566345 PASS=True
-TASK=medium-1   GRADER=server.graders:MediumGrader         SCORE=0.563201 PASS=True
-TASK=hard-1     GRADER=server.graders:HardGrader           SCORE=0.496589 PASS=True
+TASK=easy-1     GRADER=grader:EasyGrader                   SCORE=0.566345 PASS=True
+TASK=medium-1   GRADER=grader:MediumGrader                 SCORE=0.563201 PASS=True
+TASK=hard-1     GRADER=grader:HardGrader                   SCORE=0.496589 PASS=True
 graded_count= 3
 out_of_range= 0
 all_pass= True
@@ -62,9 +62,9 @@ Result: PASS
 Observed output:
 ```text
 tasks_in_yaml= 3
-TASK=easy-1     GRADER=server.graders:EasyGrader           SCORE=0.545643 PASS=True
-TASK=medium-1   GRADER=server.graders:MediumGrader         SCORE=0.507149 PASS=True
-TASK=hard-1     GRADER=server.graders:HardGrader           SCORE=0.531312 PASS=True
+TASK=easy-1     GRADER=grader:EasyGrader                   SCORE=0.545643 PASS=True
+TASK=medium-1   GRADER=grader:MediumGrader                 SCORE=0.507149 PASS=True
+TASK=hard-1     GRADER=grader:HardGrader                   SCORE=0.531312 PASS=True
 graded_count= 3
 out_of_range= 0
 all_pass= True
