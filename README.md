@@ -7,7 +7,7 @@ emoji: "🧪"
 colorFrom: blue
 colorTo: green
 pinned: false
-short_description: Multi-language intelligent code evaluation backend for OpenEnv tasks.
+short_description: OpenEnv multi-language code evaluation backend.
 ---
 
 # OpenEnv: Intelligent Code Evaluation Backend
