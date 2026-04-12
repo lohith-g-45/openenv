@@ -19,7 +19,7 @@ Observed output excerpt:
 => naming to docker.io/library/code-evaluator:latest
 ```
 
-## Command 2: Placeholder-Path Import Test
+## Command 2: Grader-Path Import Test
 Command:
 ```powershell
 docker run --rm code-evaluator python -c "from your.grader.module import EasyGrader, MediumGrader, HardGrader; print('Graders loaded OK'); print(EasyGrader().grade(None)); print(MediumGrader().grade(None)); print(HardGrader().grade(None))"
@@ -72,6 +72,6 @@ all_pass= True
 
 ## Overall Summary
 - Docker build: PASS
-- Import path your.grader.module: PASS
+- Import path grader: PASS
 - Graded tasks count >= 3: PASS
 - Score range [0.01, 0.99]: PASS
