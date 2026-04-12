@@ -3,6 +3,11 @@ title: code-evaluator
 sdk: docker
 app_port: 7860
 license: mit
+emoji: "🧪"
+colorFrom: blue
+colorTo: green
+pinned: false
+short_description: Multi-language intelligent code evaluation backend for OpenEnv tasks.
 ---
 
 # OpenEnv: Intelligent Code Evaluation Backend
