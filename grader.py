@@ -5,7 +5,7 @@
 import random
 
 _EPS = 1e-6
-_RNG = random.SystemRandom()
+_RNG = random.Random(2026)
 
 
 def _clamp(score: float) -> float:
@@ -25,6 +25,9 @@ class EvaluationGrader:
     _JITTER = 0.02
 
     def __call__(self, state: dict, task: dict | None = None) -> float:
+        return self.grade(state, task)
+
+    def grade(self, state: dict, task: dict | None = None) -> float:
         return self.evaluate(state, task)
 
     def evaluate(self, state: dict, task: dict | None = None) -> float:
@@ -65,6 +68,9 @@ class EasyGrader:
     _JITTER = 0.015
 
     def __call__(self, state: dict, task: dict | None = None) -> float:
+        return self.grade(state, task)
+
+    def grade(self, state: dict, task: dict | None = None) -> float:
         return self.evaluate(state, task)
 
     def evaluate(self, state: dict, task: dict | None = None) -> float:
@@ -98,6 +104,9 @@ class MediumGrader:
     _JITTER = 0.015
 
     def __call__(self, state: dict, task: dict | None = None) -> float:
+        return self.grade(state, task)
+
+    def grade(self, state: dict, task: dict | None = None) -> float:
         return self.evaluate(state, task)
 
     def evaluate(self, state: dict, task: dict | None = None) -> float:
@@ -140,6 +149,9 @@ class HardGrader:
     _JITTER = 0.015
 
     def __call__(self, state: dict, task: dict | None = None) -> float:
+        return self.grade(state, task)
+
+    def grade(self, state: dict, task: dict | None = None) -> float:
         return self.evaluate(state, task)
 
     def evaluate(self, state: dict, task: dict | None = None) -> float:

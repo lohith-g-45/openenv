@@ -1,7 +1,7 @@
 openenv:
   name: Intelligent Code Evaluation and Optimization Environment
   version: 1.0.0
-  deterministic: false
+  deterministic: true
   scoring:
     min_exclusive: 0.0
     max_exclusive: 1.0

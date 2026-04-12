@@ -12,7 +12,7 @@ except ImportError:
 EPS = 1e-6
 SCORE_MIN = 0.35
 SCORE_MAX = 0.72
-RNG = random.SystemRandom()
+RNG = random.Random(2026)
 
 DIFFICULTY_FACTORS = {"easy": 0.98, "medium": 0.94, "hard": 0.90}
 
