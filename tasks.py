@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List
 
-# Import graders directly from grader.py (no server.graders package needed)
-from your.grader.module import EasyGrader, MediumGrader, HardGrader
+# Import graders through server compatibility path.
+from server.graders import EasyGrader, MediumGrader, HardGrader
 
 
 @dataclass(frozen=True)
