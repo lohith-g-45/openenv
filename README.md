@@ -1,3 +1,10 @@
+---
+title: code-evaluator
+sdk: docker
+app_port: 7860
+license: mit
+---
+
 # OpenEnv: Intelligent Code Evaluation Backend
 
 OpenEnv is a backend-first coding-evaluation environment that supports Python, C, and Java. It provides two user-facing workflows:
