@@ -15,6 +15,15 @@ openenv:
     - id: hard-1
       difficulty: hard
       grader: server.graders:HardGrader
+    - id: easy-2
+      difficulty: easy
+      grader: server.graders:EasyGrader
+    - id: medium-2
+      difficulty: medium
+      grader: server.graders:MediumGrader
+    - id: hard-2
+      difficulty: hard
+      grader: server.graders:HardGrader
   state_schema:
     type: object
     required:
