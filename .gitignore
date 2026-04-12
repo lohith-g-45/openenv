@@ -1,6 +1,11 @@
 .env
 venv/
 __pycache__/
+*.pyc
+.pytest_cache/
+build/
+dist_test/
+*.egg-info/
 *.txt
 !requirements.txt
 *.bat
